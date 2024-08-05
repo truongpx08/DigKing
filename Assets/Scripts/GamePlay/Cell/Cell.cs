@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class Cell : TruongMonoBehaviour
@@ -85,5 +88,12 @@ public class Cell : TruongMonoBehaviour
     public void SetIsProcessed(bool processed)
     {
         this.isProcessed = processed;
+    }
+
+    [Button]
+    public bool IsBreakableBorder()
+    {
+        var cells = GetAdjacentCells();
+        return cells.All(c => c == null || c.Data.ModelData.type != ECellType.Thick || !c.isActiveAndEnabled);
     }
 }

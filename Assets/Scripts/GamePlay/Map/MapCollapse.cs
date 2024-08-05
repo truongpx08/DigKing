@@ -21,6 +21,7 @@ public class MapCollapse : TruongMonoBehaviour
     private Dictionary<int, List<int>> resultListIndexDictionary = new();
     [ShowInInspector]
     private Dictionary<int, List<Cell>> resultListCellDictionary = new();
+    [SerializeField] private int maxAreaKey;
 
     [Button]
     public void Collapse()
@@ -49,14 +50,38 @@ public class MapCollapse : TruongMonoBehaviour
             CalculateResultListIndex();
             CalculateResultListCell();
             DestroySmallerAreas();
+            BreakRemainingThinCells();
         }
     }
+
+    private void BreakRemainingThinCells()  
+    {  
+        var unbreakableKeys = resultListIndexDictionary[maxAreaKey].ToHashSet();  
+
+        foreach (var (key, cells) in this.nextCellOfBorderDictionary)  
+        {  
+            // Nếu key đã có trong danh sách không thể phá hủy, bỏ qua  
+            if (unbreakableKeys.Contains(key)) continue;   
+
+            foreach (var cell in cells)  
+            {  
+                // Kiểm tra kiểu của ô trước khi gọi phương thức  
+                if (cell.Data.ModelData.type != ECellType.Thin) continue;   
+
+                // Kiểm tra xem ô có phải là biên có thể phá hủy không  
+                if (cell.IsBreakableBorder())  
+                {  
+                    DisableGo(cell);  
+                }  
+            }  
+        }  
+    } 
 
     private void DestroySmallerAreas()
     {
         // Track the maximum count and the associated key  
         int maxCount = -1;
-        int maxKey = -1;
+        this.maxAreaKey = -1;
 
         // Find the key with the maximum area count  
         foreach (var item in this.resultListCellDictionary)
@@ -64,17 +89,17 @@ public class MapCollapse : TruongMonoBehaviour
             if (item.Value.Count > maxCount)
             {
                 maxCount = item.Value.Count;
-                maxKey = item.Key;
+                maxAreaKey = item.Key;
             }
         }
 
         // If no max key found, exit early  
-        if (maxKey == -1) return;
+        if (maxAreaKey == -1) return;
 
         // Disable all areas except the one with the maximum count  
         foreach (var item in this.resultListCellDictionary)
         {
-            if (item.Key != maxKey)
+            if (item.Key != maxAreaKey)
             {
                 // Disable the cells in the smaller areas  
                 foreach (var cell in item.Value)
@@ -176,40 +201,40 @@ public class MapCollapse : TruongMonoBehaviour
         }
     }
 
-    private void SetNextCellOfBorderDictionary()  
-    {  
-        for (int count = 0; count < borderDictionary.Count; count++)  
-        {  
-            var border = GetNextCellOfBorder(borderDictionary[count]);  
-            nextCellOfBorderDictionary[count] = border;  
-        }  
-    }  
+    private void SetNextCellOfBorderDictionary()
+    {
+        for (int count = 0; count < borderDictionary.Count; count++)
+        {
+            var border = GetNextCellOfBorder(borderDictionary[count]);
+            nextCellOfBorderDictionary[count] = border;
+        }
+    }
 
-    private List<Cell> GetNextCellOfBorder(List<Cell> list)  
-    {  
+    private List<Cell> GetNextCellOfBorder(List<Cell> list)
+    {
         var resultSet = new HashSet<Cell>(); // Sử dụng HashSet để kiểm tra sự tồn tại một cách nhanh chóng  
 
-        foreach (var cell in list)  
-        {  
-            if (cell != null)  
-            {  
-                AddCellToSet(cell.Data.ModelData.upCell);  
-                AddCellToSet(cell.Data.ModelData.downCell);  
-                AddCellToSet(cell.Data.ModelData.leftCell);  
-                AddCellToSet(cell.Data.ModelData.rightCell);  
-            }  
-        }  
+        foreach (var cell in list)
+        {
+            if (cell != null)
+            {
+                AddCellToSet(cell.Data.ModelData.upCell);
+                AddCellToSet(cell.Data.ModelData.downCell);
+                AddCellToSet(cell.Data.ModelData.leftCell);
+                AddCellToSet(cell.Data.ModelData.rightCell);
+            }
+        }
 
         return new List<Cell>(resultSet); // Chuyển đổi lại HashSet thành List  
 
-        void AddCellToSet(Cell cell)  
-        {  
+        void AddCellToSet(Cell cell)
+        {
             if (cell != null) // Chỉ thêm nếu cell không null  
-            {  
+            {
                 resultSet.Add(cell); // HashSet tự handle việc trùng lặp  
-            }  
-        }  
-    }  
+            }
+        }
+    }
 
 
     private void SetBorderDictionary()
