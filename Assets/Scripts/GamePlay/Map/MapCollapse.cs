@@ -54,28 +54,28 @@ public class MapCollapse : TruongMonoBehaviour
         }
     }
 
-    private void BreakRemainingThinCells()  
-    {  
-        var unbreakableKeys = resultListIndexDictionary[maxAreaKey].ToHashSet();  
+    private void BreakRemainingThinCells()
+    {
+        var unbreakableKeys = resultListIndexDictionary[maxAreaKey].ToHashSet();
 
-        foreach (var (key, cells) in this.nextCellOfBorderDictionary)  
-        {  
+        foreach (var (key, cells) in this.nextCellOfBorderDictionary)
+        {
             // Nếu key đã có trong danh sách không thể phá hủy, bỏ qua  
-            if (unbreakableKeys.Contains(key)) continue;   
+            if (unbreakableKeys.Contains(key)) continue;
 
-            foreach (var cell in cells)  
-            {  
+            foreach (var cell in cells)
+            {
                 // Kiểm tra kiểu của ô trước khi gọi phương thức  
-                if (cell.Data.ModelData.type != ECellType.Thin) continue;   
+                if (cell.Data.ModelData.type != ECellType.Thin) continue;
 
                 // Kiểm tra xem ô có phải là biên có thể phá hủy không  
-                if (cell.IsBreakableBorder())  
-                {  
-                    DisableGo(cell);  
-                }  
-            }  
-        }  
-    } 
+                if (cell.IsBreakableBorder())
+                {
+                    cell.StateMachine.ChangeState(ECellState.Disabled);
+                }
+            }
+        }
+    }
 
     private void DestroySmallerAreas()
     {
@@ -104,7 +104,7 @@ public class MapCollapse : TruongMonoBehaviour
                 // Disable the cells in the smaller areas  
                 foreach (var cell in item.Value)
                 {
-                    DisableGo(cell);
+                    cell.StateMachine.ChangeState(ECellState.Disabled);
                 }
             }
         }

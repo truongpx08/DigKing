@@ -7,11 +7,19 @@ public class Map : TruongSingleton<Map>
 {
     [SerializeField] private MapGenerator generator;
     public MapGenerator Generator => this.generator;
+    [SerializeField] private MapCollapse collapse;
+    public MapCollapse Collapse => this.collapse;
 
     protected override void LoadComponents()
     {
         base.LoadComponents();
+        LoadCollapse();
         LoadGenerator();
+    }
+
+    private void LoadCollapse()
+    {
+        this.collapse = GetComponentInChildren<MapCollapse>();
     }
 
     private void LoadGenerator()

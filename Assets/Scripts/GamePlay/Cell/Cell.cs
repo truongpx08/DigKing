@@ -94,6 +94,6 @@ public class Cell : TruongMonoBehaviour
     public bool IsBreakableBorder()
     {
         var cells = GetAdjacentCells();
-        return cells.All(c => c == null || c.Data.ModelData.type != ECellType.Thick || !c.isActiveAndEnabled);
+        return cells.All(c => c == null || c.stateMachine.CurrentState != ECellState.Think);
     }
 }

@@ -112,6 +112,7 @@ public class PlayerMovement : PlayerReference
     {
         isStopping = true;
         Debug.Log("OnMovementCompleted");
+        Map.Instance.Collapse.Collapse();
     }
 
     private Cell GetNextCell()
