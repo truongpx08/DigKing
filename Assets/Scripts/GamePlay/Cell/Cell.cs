@@ -64,7 +64,7 @@ public class Cell : TruongMonoBehaviour
         return null; // Return null if no unprocessed thick cell is found  
     }
 
-    public Cell[] GetAdjacentCells()
+    public Cell[] Get4AdjacentCells()
     {
         // Define an array of neighboring cells  
         Cell[] neighbors =
@@ -76,6 +76,26 @@ public class Cell : TruongMonoBehaviour
         };
 
         return neighbors; // Return null if no unprocessed thick cell is found  
+    }
+
+    public Cell[] Get8AdjacentCells()
+    {
+        // Khai báo mảng cho các ô lân cận  
+        var neighbors = new Cell[8];
+
+        // Lấy 4 ô lân cận  
+        var _4Neighbors = Get4AdjacentCells();
+
+        // Điền các ô chéo vào mảng neighbors  
+        neighbors[0] = this.data.ModelData.upLeftCell;
+        neighbors[1] = this.data.ModelData.upRightCell;
+        neighbors[2] = this.data.ModelData.downLeftCell;
+        neighbors[3] = this.data.ModelData.downRightCell;
+
+        // Điền các ô lân cận còn lại vào mảng neighbors  
+        Array.Copy(_4Neighbors, 0, neighbors, 4, 4);
+
+        return neighbors; // Trả về mảng ô lân cận  
     }
 
     private bool IsUnprocessedThickCell(Cell cell)
@@ -93,7 +113,12 @@ public class Cell : TruongMonoBehaviour
     [Button]
     public bool IsBreakableBorder()
     {
-        var cells = GetAdjacentCells();
+        var cells = Get8AdjacentCells();
         return cells.All(c => c == null || c.stateMachine.CurrentState != ECellState.Think);
+    }
+
+    public bool IsThisCell(int x, int y)
+    {
+        return Data.ModelData.x == x && Data.ModelData.y == y;
     }
 }

@@ -28,9 +28,25 @@ public class CellInitializer : CellReference
 
     public void AddAdjacentCells()
     {
-        this.Data.upCell = MapGenerator.FindCell(this.Data.x, this.Data.y + 1);
-        this.Data.downCell = MapGenerator.FindCell(this.Data.x, this.Data.y - 1);
-        this.Data.leftCell = MapGenerator.FindCell(this.Data.x - 1, this.Data.y);
-        this.Data.rightCell = MapGenerator.FindCell(this.Data.x + 1, this.Data.y);
+        this.MapGenerator.CellList.ForEach(cellItem =>
+        {
+            if (cellItem.IsThisCell(this.Data.x, this.Data.y + 1))
+                this.Data.upCell = cellItem;
+            if (cellItem.IsThisCell(this.Data.x, this.Data.y - 1))
+                this.Data.downCell = cellItem;
+            if (cellItem.IsThisCell(this.Data.x - 1, this.Data.y))
+                this.Data.leftCell = cellItem;
+            if (cellItem.IsThisCell(this.Data.x + 1, this.Data.y))
+                this.Data.rightCell = cellItem;
+
+            if (cellItem.IsThisCell(this.Data.x - 1, this.Data.y + 1))
+                this.Data.upLeftCell = cellItem;
+            if (cellItem.IsThisCell(this.Data.x + 1, this.Data.y + 1))
+                this.Data.upRightCell = cellItem;
+            if (cellItem.IsThisCell(this.Data.x - 1, this.Data.y - 1))
+                this.Data.downLeftCell = cellItem;
+            if (cellItem.IsThisCell(this.Data.x + 1, this.Data.y - 1))
+                this.Data.downRightCell = cellItem;
+        });
     }
 }

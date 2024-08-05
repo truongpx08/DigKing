@@ -19,6 +19,10 @@ public class CellModelData
     public Cell downCell;
     public Cell leftCell;
     public Cell rightCell;
+    public Cell upLeftCell;
+    public Cell upRightCell;
+    public Cell downLeftCell;
+    public Cell downRightCell;
 }
 
 public class CellData : CellReference

@@ -26,12 +26,17 @@ public class MapCollapse : TruongMonoBehaviour
     [Button]
     public void Collapse()
     {
-        Map.Instance.Generator.CellList.ForEach(cell => cell.SetIsProcessed(false));
-        cellDictionary.Clear();
-        ProcessOneList();
+        ClearAll();
+        StartProcess();
     }
 
-    private void ProcessOneList()
+    private void ClearAll()
+    {
+        Map.Instance.Generator.CellList.ForEach(cell => cell.SetIsProcessed(false));
+        cellDictionary.Clear();
+    }
+
+    private void StartProcess()
     {
         cellList.Clear();
 
@@ -73,6 +78,15 @@ public class MapCollapse : TruongMonoBehaviour
                 {
                     cell.StateMachine.ChangeState(ECellState.Disabled);
                 }
+            }
+        }
+
+        foreach (var cell in Map.Instance.GetThinCell())
+        {
+            // Kiểm tra xem ô có phải là biên có thể phá hủy không  
+            if (cell.IsBreakableBorder())
+            {
+                cell.StateMachine.ChangeState(ECellState.Disabled);
             }
         }
     }
@@ -354,7 +368,7 @@ public class MapCollapse : TruongMonoBehaviour
         {
             Debug.Log("Completed a list.");
             AddCurrentCellListToDictionary();
-            ProcessOneList(); //Loop
+            StartProcess(); //Loop
         }
     }
 
