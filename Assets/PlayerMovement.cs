@@ -16,36 +16,27 @@ public enum EPlayerMovementType
 
 public class PlayerMovement : PlayerReference
 {
-    [SerializeField] private EPlayerMovementType moveType;
-    [SerializeField] private bool shouldStop;
+    [SerializeField] private EPlayerMovementType currentMoveType;
     [SerializeField] private bool isStopping;
-    private TweenerCore<Vector3, Vector3, VectorOptions> moveTween;
 
     public void Move(EPlayerMovementType newType)
     {
         if (!CanMove(newType)) return;
-        this.moveType = newType;
-
-        if (moveTween != null && moveTween.IsActive())
-        {
-            this.shouldStop = true;
-            return;
-        }
-
+        this.currentMoveType = newType;
         StartMovement();
     }
 
     private bool CanMove(EPlayerMovementType newType)
     {
         if (isStopping) return true;
-        if (newType == this.moveType) return false;
+        if (newType == this.currentMoveType) return false;
         if (IsOppositeDirection(newType)) return false;
         return true;
     }
 
     private bool IsOppositeDirection(EPlayerMovementType newType)
     {
-        switch (this.moveType)
+        switch (this.currentMoveType)
         {
             case EPlayerMovementType.Up:
                 if (newType == EPlayerMovementType.Down) return true;
@@ -68,14 +59,13 @@ public class PlayerMovement : PlayerReference
 
     private void StartMovement()
     {
-        this.shouldStop = false;
         StartCoroutine(MoveCoroutine());
     }
 
     private IEnumerator MoveCoroutine()
     {
         Cell nextCell = GetNextCell();
-        if (nextCell == null)
+        if (nextCell == null || nextCell.StateMachine.CurrentState == ECellState.Disabled)
         {
             OnMovementCompleted();
             yield break; // Exit if there is no next cell  
@@ -98,13 +88,9 @@ public class PlayerMovement : PlayerReference
         player.transform.position = targetPosition;
         this.player.Data.SetCurrentCell(nextCell);
         nextCell.StateMachine.ChangeState(ECellState.Thin);
-        if (!this.shouldStop)
-        {
-            StopAllCoroutines();
-            StartCoroutine(MoveCoroutine()); // Continue moving to the next cell  
-        }
-        else
-            StartMovement();
+
+        StopAllCoroutines();
+        StartCoroutine(MoveCoroutine()); // Continue moving to the next cell  
     }
 
     private void OnMovementCompleted()
@@ -117,13 +103,13 @@ public class PlayerMovement : PlayerReference
     private Cell GetNextCell()
     {
         var currentCell = this.player.Data.ModelData.currentCell.Data.ModelData;
-        return moveType switch
+        return currentMoveType switch
         {
             EPlayerMovementType.Up => currentCell.upCell,
             EPlayerMovementType.Down => currentCell.downCell,
             EPlayerMovementType.Left => currentCell.leftCell,
             EPlayerMovementType.Right => currentCell.rightCell,
-            _ => throw new ArgumentOutOfRangeException(nameof(moveType), moveType, null)
+            _ => throw new ArgumentOutOfRangeException(nameof(currentMoveType), currentMoveType, null)
         };
     }
 
