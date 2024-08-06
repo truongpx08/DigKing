@@ -18,6 +18,8 @@ public class PlayerMovement : PlayerReference
 {
     [SerializeField] private EPlayerMovementType currentMoveType;
     [SerializeField] private bool isStopping;
+    [SerializeField] private int remainingMoveCount;
+    [SerializeField] private bool shouldReduceRemainingMoves;
 
     public void Move(EPlayerMovementType newType)
     {
@@ -29,6 +31,7 @@ public class PlayerMovement : PlayerReference
     private bool CanMove(EPlayerMovementType newType)
     {
         if (isStopping) return true;
+        if (this.remainingMoveCount <= 0) return false;
         if (newType == this.currentMoveType) return false;
         if (IsOppositeDirection(newType)) return false;
         return true;
@@ -59,6 +62,8 @@ public class PlayerMovement : PlayerReference
 
     private void StartMovement()
     {
+        SetIsStopping(false);
+        this.shouldReduceRemainingMoves = true;
         StartCoroutine(MoveCoroutine());
     }
 
@@ -69,6 +74,13 @@ public class PlayerMovement : PlayerReference
         {
             OnMovementCompleted();
             yield break; // Exit if there is no next cell  
+        }
+
+        if (shouldReduceRemainingMoves && nextCell.StateMachine.CurrentState == ECellState.Think)
+        {
+            this.shouldReduceRemainingMoves = false;
+
+            this.remainingMoveCount--;
         }
 
         Vector3 startPosition = player.transform.position;
@@ -89,6 +101,7 @@ public class PlayerMovement : PlayerReference
         this.player.Data.SetCurrentCell(nextCell);
         nextCell.StateMachine.ChangeState(ECellState.Thin);
 
+        //Loop Movement
         StopAllCoroutines();
         StartCoroutine(MoveCoroutine()); // Continue moving to the next cell  
     }
@@ -96,8 +109,14 @@ public class PlayerMovement : PlayerReference
     private void OnMovementCompleted()
     {
         SetIsStopping(true);
+        ResetRemainingMoveCount();
         Debug.Log("OnMovementCompleted");
         Map.Instance.Collapse.Collapse();
+    }
+
+    public void ResetRemainingMoveCount()
+    {
+        this.remainingMoveCount = 3;
     }
 
     private Cell GetNextCell()

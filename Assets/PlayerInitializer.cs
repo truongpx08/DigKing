@@ -12,6 +12,7 @@ public class PlayerInitializer : PlayerReference
             this.player.Data.SetCurrentCell(currentCell);
             this.player.transform.position = currentCell.transform.position;
             this.player.Movement.SetIsStopping(true);
+            this.player.Movement.ResetRemainingMoveCount();
         }
     }
 }
