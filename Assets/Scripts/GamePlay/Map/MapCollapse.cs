@@ -6,34 +6,28 @@ using UnityEngine;
 
 public class MapCollapse : TruongMonoBehaviour
 {
-    [SerializeField] private List<Cell> cellList = new();
+    [ShowInInspector] private HashSet<Cell> cellList = new();
     [ShowInInspector]
-    private Dictionary<int, List<Cell>> cellDictionary = new();
+    private Dictionary<int, HashSet<Cell>> cellDictionary = new();
     [ShowInInspector]
-    private Dictionary<int, List<Cell>> borderDictionary = new();
+    private Dictionary<int, HashSet<Cell>> borderDictionary = new();
     [ShowInInspector]
-    private Dictionary<int, List<Cell>> nextCellOfBorderDictionary = new();
+    private Dictionary<int, HashSet<Cell>> nextCellOfBorderDictionary = new();
     [ShowInInspector]
-    private Dictionary<int, List<Cell>> dicCheck = new();
+    private Dictionary<int, HashSet<int>> mergeDictionary = new();
     [ShowInInspector]
-    private Dictionary<int, List<int>> mergeDictionary = new();
+    private Dictionary<int, HashSet<int>> resultListIndexDictionary = new();
     [ShowInInspector]
-    private Dictionary<int, List<int>> resultListIndexDictionary = new();
-    [ShowInInspector]
-    private Dictionary<int, List<Cell>> resultListCellDictionary = new();
-    [SerializeField] private int maxAreaKey;
+    private Dictionary<int, HashSet<Cell>> resultListCellDictionary = new();
+    [SerializeField] private int biggestAreaKey;
 
     [Button]
     public void Collapse()
     {
-        ClearAll();
-        StartProcess();
-    }
-
-    private void ClearAll()
-    {
         Map.Instance.Generator.CellList.ForEach(cell => cell.SetIsProcessed(false));
         cellDictionary.Clear();
+        resultListIndexDictionary.Clear();
+        StartProcess();
     }
 
     private void StartProcess()
@@ -61,7 +55,7 @@ public class MapCollapse : TruongMonoBehaviour
 
     private void BreakRemainingThinCells()
     {
-        var unbreakableKeys = resultListIndexDictionary[maxAreaKey].ToHashSet();
+        var unbreakableKeys = resultListIndexDictionary[biggestAreaKey];
 
         foreach (var (key, cells) in this.nextCellOfBorderDictionary)
         {
@@ -95,7 +89,7 @@ public class MapCollapse : TruongMonoBehaviour
     {
         // Track the maximum count and the associated key  
         int maxCount = -1;
-        this.maxAreaKey = -1;
+        this.biggestAreaKey = -1;
 
         // Find the key with the maximum area count  
         foreach (var item in this.resultListCellDictionary)
@@ -103,17 +97,17 @@ public class MapCollapse : TruongMonoBehaviour
             if (item.Value.Count > maxCount)
             {
                 maxCount = item.Value.Count;
-                maxAreaKey = item.Key;
+                biggestAreaKey = item.Key;
             }
         }
 
         // If no max key found, exit early  
-        if (maxAreaKey == -1) return;
+        if (biggestAreaKey == -1) return;
 
         // Disable all areas except the one with the maximum count  
         foreach (var item in this.resultListCellDictionary)
         {
-            if (item.Key != maxAreaKey)
+            if (item.Key != biggestAreaKey)
             {
                 // Disable the cells in the smaller areas  
                 foreach (var cell in item.Value)
@@ -133,7 +127,7 @@ public class MapCollapse : TruongMonoBehaviour
         foreach (var itemDictionary in resultListIndexDictionary)
         {
             var indexList = itemDictionary.Value;
-            var list = new List<Cell>();
+            var list = new HashSet<Cell>();
 
             // Loop through the indexes and accumulate cells  
             foreach (var index in indexList)
@@ -158,14 +152,12 @@ public class MapCollapse : TruongMonoBehaviour
         {
             var merged = false; // Theo dõi xem có mục nào đã được gộp hay chưa  
 
-            // Chuyển đổi resultListIndexDictionary tại chỉ số j thành HashSet  
             for (int j = 0; j < this.resultListIndexDictionary.Count; j++)
             {
-                // Chuyển đổi resultItem thành HashSet để sử dụng UnionWith  
-                var resultItem = new HashSet<int>(this.resultListIndexDictionary[j]);
+                var resultItem = this.resultListIndexDictionary[j];
 
                 // Lấy danh sách từ mergeItem  
-                var mergeValues = mergeItem.Value; // mergeItem.Value chứa List<int>  
+                var mergeValues = mergeItem.Value;
 
                 // Kiểm tra xem có thể gộp không  
                 if (resultItem.Overlaps(mergeValues)) // Kiểm tra sự giao nhau  
@@ -174,7 +166,7 @@ public class MapCollapse : TruongMonoBehaviour
 
                     // Gộp tất cả các mục mới vào resultItem  
                     resultItem.UnionWith(mergeValues); // Gộp các mục của mergeValues vào resultItem  
-                    this.resultListIndexDictionary[j] = resultItem.ToList(); // Chuyển đổi lại thành List  
+                    this.resultListIndexDictionary[j] = resultItem;
                     break; // Đã gộp xong, không cần kiểm tra nữa  
                 }
             }
@@ -183,7 +175,7 @@ public class MapCollapse : TruongMonoBehaviour
             if (!merged)
             {
                 this.resultListIndexDictionary.Add(mergeItem.Key,
-                    new List<int>(mergeItem.Value));
+                    new HashSet<int>(mergeItem.Value));
             }
         }
     }
@@ -195,7 +187,7 @@ public class MapCollapse : TruongMonoBehaviour
 
         for (int i = 0; i < borderDictionary.Count; i++)
         {
-            var list0 = new List<int> { i }; // Create a copy of the current list  
+            var list0 = new HashSet<int> { i }; // Create a copy of the current list  
             mergeDictionary[i] = list0;
 
             for (int j = 0; j < nextCellOfBorderDictionary.Count; j++)
@@ -208,7 +200,7 @@ public class MapCollapse : TruongMonoBehaviour
                 if (canMerge)
                 {
                     // Combine the cell lists  
-                    var list = new List<int>(mergeDictionary[i]) { j }; // Create a copy of the current list  
+                    var list = new HashSet<int>(mergeDictionary[i]) { j }; // Create a copy of the current list  
                     mergeDictionary[i] = list;
                 }
             }
@@ -217,6 +209,7 @@ public class MapCollapse : TruongMonoBehaviour
 
     private void SetNextCellOfBorderDictionary()
     {
+        nextCellOfBorderDictionary.Clear();
         for (int count = 0; count < borderDictionary.Count; count++)
         {
             var border = GetNextCellOfBorder(borderDictionary[count]);
@@ -224,9 +217,9 @@ public class MapCollapse : TruongMonoBehaviour
         }
     }
 
-    private List<Cell> GetNextCellOfBorder(List<Cell> list)
+    private HashSet<Cell> GetNextCellOfBorder(HashSet<Cell> list)
     {
-        var resultSet = new HashSet<Cell>(); // Sử dụng HashSet để kiểm tra sự tồn tại một cách nhanh chóng  
+        var result = new HashSet<Cell>(); // Sử dụng HashSet để kiểm tra sự tồn tại một cách nhanh chóng  
 
         foreach (var cell in list)
         {
@@ -239,13 +232,13 @@ public class MapCollapse : TruongMonoBehaviour
             }
         }
 
-        return new List<Cell>(resultSet); // Chuyển đổi lại HashSet thành List  
+        return result;
 
         void AddCellToSet(Cell cell)
         {
             if (cell != null) // Chỉ thêm nếu cell không null  
             {
-                resultSet.Add(cell); // HashSet tự handle việc trùng lặp  
+                result.Add(cell); // HashSet tự handle việc trùng lặp  
             }
         }
     }
@@ -253,6 +246,7 @@ public class MapCollapse : TruongMonoBehaviour
 
     private void SetBorderDictionary()
     {
+        borderDictionary.Clear();
         int count = 0;
         cellDictionary.ForEach(item =>
         {
@@ -262,15 +256,15 @@ public class MapCollapse : TruongMonoBehaviour
         });
     }
 
-    private List<Cell> GetBorder(List<Cell> list)
+    private HashSet<Cell> GetBorder(HashSet<Cell> cells)
     {
-        var borderList = new List<Cell>();
+        var borderList = new HashSet<Cell>();
 
         var xValues = new Dictionary<int, (int maxY, Cell cellMaxY, int minY, Cell cellMinY)>();
         var yValues = new Dictionary<int, (int maxX, Cell cellMaxX, int minX, Cell cellMinX)>();
 
         // Traverse the cells once to collect information about maxY, minY, maxX, minX  
-        foreach (var cell in list)
+        foreach (var cell in cells)
         {
             int x = cell.Data.ModelData.x;
             int y = cell.Data.ModelData.y;
@@ -352,7 +346,7 @@ public class MapCollapse : TruongMonoBehaviour
     private void ProcessCell(Cell cell)
     {
         cell.SetIsProcessed(true); // Mark the cell as processed  
-        cellList.Add(cell);
+        this.cellList.Add(cell);
         ProcessNextCell(cell); // Get the next thick cell  
     }
 
@@ -374,6 +368,6 @@ public class MapCollapse : TruongMonoBehaviour
 
     private void AddCurrentCellListToDictionary()
     {
-        cellDictionary[cellDictionary.Count] = new List<Cell>(cellList);
+        cellDictionary[cellDictionary.Count] = new HashSet<Cell>(cellList);
     }
 }
