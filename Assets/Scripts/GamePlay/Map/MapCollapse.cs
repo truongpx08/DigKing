@@ -26,7 +26,6 @@ public class MapCollapse : TruongMonoBehaviour
     {
         Map.Instance.Generator.CellList.ForEach(cell => cell.SetIsProcessed(false));
         cellDictionary.Clear();
-        resultListIndexDictionary.Clear();
         StartProcess();
     }
 
@@ -147,6 +146,7 @@ public class MapCollapse : TruongMonoBehaviour
 
     private void CalculateResultListIndex()
     {
+        resultListIndexDictionary.Clear();
         // Duyệt qua từng mục trong mergeDictionary  
         foreach (var mergeItem in mergeDictionary)
         {
@@ -154,6 +154,7 @@ public class MapCollapse : TruongMonoBehaviour
 
             for (int j = 0; j < this.resultListIndexDictionary.Count; j++)
             {
+                if (!this.resultListIndexDictionary.ContainsKey(j)) continue;
                 var resultItem = this.resultListIndexDictionary[j];
 
                 // Lấy danh sách từ mergeItem  
