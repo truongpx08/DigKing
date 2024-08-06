@@ -16,7 +16,7 @@ public enum EPlayerMovementType
 
 public class PlayerMovement : PlayerReference
 {
-    [SerializeField] private EPlayerMovementType type;
+    [SerializeField] private EPlayerMovementType moveType;
     [SerializeField] private bool shouldStop;
     [SerializeField] private bool isStopping;
     private TweenerCore<Vector3, Vector3, VectorOptions> moveTween;
@@ -24,7 +24,7 @@ public class PlayerMovement : PlayerReference
     public void Move(EPlayerMovementType newType)
     {
         if (!CanMove(newType)) return;
-        this.type = newType;
+        this.moveType = newType;
 
         if (moveTween != null && moveTween.IsActive())
         {
@@ -38,14 +38,14 @@ public class PlayerMovement : PlayerReference
     private bool CanMove(EPlayerMovementType newType)
     {
         if (isStopping) return true;
-        if (newType == this.type) return false;
+        if (newType == this.moveType) return false;
         if (IsOppositeDirection(newType)) return false;
         return true;
     }
 
     private bool IsOppositeDirection(EPlayerMovementType newType)
     {
-        switch (this.type)
+        switch (this.moveType)
         {
             case EPlayerMovementType.Up:
                 if (newType == EPlayerMovementType.Down) return true;
@@ -69,7 +69,6 @@ public class PlayerMovement : PlayerReference
     private void StartMovement()
     {
         this.shouldStop = false;
-        this.isStopping = false;
         StartCoroutine(MoveCoroutine());
     }
 
@@ -110,7 +109,7 @@ public class PlayerMovement : PlayerReference
 
     private void OnMovementCompleted()
     {
-        isStopping = true;
+        SetIsStopping(true);
         Debug.Log("OnMovementCompleted");
         Map.Instance.Collapse.Collapse();
     }
@@ -118,13 +117,18 @@ public class PlayerMovement : PlayerReference
     private Cell GetNextCell()
     {
         var currentCell = this.player.Data.ModelData.currentCell.Data.ModelData;
-        return type switch
+        return moveType switch
         {
             EPlayerMovementType.Up => currentCell.upCell,
             EPlayerMovementType.Down => currentCell.downCell,
             EPlayerMovementType.Left => currentCell.leftCell,
             EPlayerMovementType.Right => currentCell.rightCell,
-            _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+            _ => throw new ArgumentOutOfRangeException(nameof(moveType), moveType, null)
         };
+    }
+
+    public void SetIsStopping(bool value)
+    {
+        this.isStopping = value;
     }
 }
