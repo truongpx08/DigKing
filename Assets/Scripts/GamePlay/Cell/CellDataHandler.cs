@@ -9,7 +9,7 @@ public enum ECellType
 }
 
 [System.Serializable]
-public class CellModelData
+public class CellData
 {
     public int id;
     public ECellType type;
@@ -25,14 +25,14 @@ public class CellModelData
     public Cell downRightCell;
 }
 
-public class CellData : CellReference
+public class CellDataHandler : CellReference
 {
-    [SerializeField] private CellModelData modelData;
-    public CellModelData ModelData => this.modelData;
+    [SerializeField] private CellData data;
+    public CellData Data => this.data;
 
     public void AddData(int id, int x, int y)
     {
-        this.modelData = new CellModelData
+        this.data = new CellData
         {
             id = id,
             x = x,

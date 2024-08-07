@@ -44,7 +44,7 @@ public class Map : TruongSingleton<Map>
         List<Cell> cells = new List<Cell>();
         this.generator.CellList.ForEach(cell =>
         {
-            if (cell.Data.ModelData.type == type)
+            if (cell.DataHandler.Data.type == type)
                 cells.Add(cell);
         });
         return cells;
@@ -54,7 +54,7 @@ public class Map : TruongSingleton<Map>
     {
         // Find the first unprocessed thick cell  
         return generator.CellList.Find(item =>
-            item.Data.ModelData.type == ECellType.Thick && !item.IsProcessed);
+            item.DataHandler.Data.type == ECellType.Thick && !item.IsProcessed);
     }
 
     public Cell GetRandomThinCell()

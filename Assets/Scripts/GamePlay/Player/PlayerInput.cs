@@ -67,24 +67,24 @@ public class PlayerInput : MonoBehaviour
     private void OnDragUp()
     {
         Debug.Log("Dragged up");
-        Player.Instance.Movement.Move(EPlayerMovementType.Up);
+        Player.Instance.Movement.Move(EDirectionType.Up);
     }
 
     private void OnDragDown()
     {
         Debug.Log("Dragged down");
-        Player.Instance.Movement.Move(EPlayerMovementType.Down);
+        Player.Instance.Movement.Move(EDirectionType.Down);
     }
 
     private void OnDragLeft()
     {
         Debug.Log("Dragged left");
-        Player.Instance.Movement.Move(EPlayerMovementType.Left);
+        Player.Instance.Movement.Move(EDirectionType.Left);
     }
 
     private void OnDragRight()
     {
         Debug.Log("Dragged right");
-        Player.Instance.Movement.Move(EPlayerMovementType.Right);
+        Player.Instance.Movement.Move(EDirectionType.Right);
     }
 }

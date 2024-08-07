@@ -64,7 +64,7 @@ public class MapCollapse : TruongMonoBehaviour
             foreach (var cell in cells)
             {
                 // Kiểm tra kiểu của ô trước khi gọi phương thức  
-                if (cell.Data.ModelData.type != ECellType.Thin) continue;
+                if (cell.DataHandler.Data.type != ECellType.Thin) continue;
 
                 // Kiểm tra xem ô có phải là biên có thể phá hủy không  
                 if (cell.IsBreakableBorder())
@@ -226,10 +226,10 @@ public class MapCollapse : TruongMonoBehaviour
         {
             if (cell != null)
             {
-                AddCellToSet(cell.Data.ModelData.upCell);
-                AddCellToSet(cell.Data.ModelData.downCell);
-                AddCellToSet(cell.Data.ModelData.leftCell);
-                AddCellToSet(cell.Data.ModelData.rightCell);
+                AddCellToSet(cell.DataHandler.Data.upCell);
+                AddCellToSet(cell.DataHandler.Data.downCell);
+                AddCellToSet(cell.DataHandler.Data.leftCell);
+                AddCellToSet(cell.DataHandler.Data.rightCell);
             }
         }
 
@@ -267,8 +267,8 @@ public class MapCollapse : TruongMonoBehaviour
         // Traverse the cells once to collect information about maxY, minY, maxX, minX  
         foreach (var cell in cells)
         {
-            int x = cell.Data.ModelData.x;
-            int y = cell.Data.ModelData.y;
+            int x = cell.DataHandler.Data.x;
+            int y = cell.DataHandler.Data.y;
 
             // Update information for x  
             if (!xValues.ContainsKey(x))

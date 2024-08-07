@@ -27,7 +27,7 @@ public class MapGenerator : TruongMonoBehaviour
             for (int y = 0; y < height; y++)
             {
                 var cell = Instantiate(cellPrefab, this.transform);
-                cell.Data.AddData(count, x, y);
+                cell.DataHandler.AddData(count, x, y);
                 cell.Initializer.Initialize();
 
                 this.cellList.Add(cell);
@@ -49,6 +49,6 @@ public class MapGenerator : TruongMonoBehaviour
 
     public Cell FindCell(int x, int y)
     {
-        return this.cellList.Find(cell => cell.Data.ModelData.x == x && cell.Data.ModelData.y == y);
+        return this.cellList.Find(cell => cell.DataHandler.Data.x == x && cell.DataHandler.Data.y == y);
     }
 }

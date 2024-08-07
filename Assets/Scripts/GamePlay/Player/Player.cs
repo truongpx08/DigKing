@@ -8,8 +8,8 @@ public class Player : TruongSingleton<Player>
     public PlayerInitializer Initializer => this.initializer;
     [SerializeField] private PlayerMovement movement;
     public PlayerMovement Movement => movement;
-    [SerializeField] private PlayerData data;
-    public PlayerData Data => this.data;
+    [SerializeField] private PlayerDataHandler dataHandler;
+    public PlayerDataHandler DataHandler => this.dataHandler;
 
     protected override void LoadComponents()
     {
@@ -21,7 +21,7 @@ public class Player : TruongSingleton<Player>
 
     private void LoadData()
     {
-        this.data = GetComponentInChildren<PlayerData>();
+        this.dataHandler = GetComponentInChildren<PlayerDataHandler>();
     }
 
     private void LoadMovement()

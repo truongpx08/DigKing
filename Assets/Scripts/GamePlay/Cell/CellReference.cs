@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class CellReference : TruongMonoBehaviour
 {
-    [SerializeField] protected Cell cell;
-    protected CellModelData Data => this.cell.Data.ModelData;
+    [SerializeField] protected Cell cellRef;
+    protected CellData DataRef => this.cellRef.DataHandler.Data;
     protected MapGenerator MapGenerator => Map.Instance.Generator;
 
     protected override void LoadComponents()
@@ -16,6 +16,6 @@ public class CellReference : TruongMonoBehaviour
 
     private void LoadCell()
     {
-        this.cell = GetComponentInParent<Cell>();
+        this.cellRef = GetComponentInParent<Cell>();
     }
 }

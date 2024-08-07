@@ -5,7 +5,7 @@ using DG.Tweening;
 using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
 
-public enum EPlayerMovementType
+public enum EDirectionType
 {
     Up,
     Down,
@@ -16,49 +16,27 @@ public enum EPlayerMovementType
 
 public class PlayerMovement : PlayerReference
 {
-    [SerializeField] private EPlayerMovementType currentMoveType;
+    [SerializeField] private EDirectionType currentMoveType;
     [SerializeField] private bool isStopping;
     [SerializeField] private int remainingMoveCount;
     [SerializeField] private bool shouldReduceRemainingMoves;
 
-    public void Move(EPlayerMovementType newType)
+    public void Move(EDirectionType newType)
     {
         if (!CanMove(newType)) return;
         this.currentMoveType = newType;
         StartMovement();
     }
 
-    private bool CanMove(EPlayerMovementType newType)
+    private bool CanMove(EDirectionType newType)
     {
         if (isStopping) return true;
         if (this.remainingMoveCount <= 0) return false;
         if (newType == this.currentMoveType) return false;
-        if (IsOppositeDirection(newType)) return false;
+        if (CharacterVirtual.IsOppositeDirection(newType, this.currentMoveType)) return false;
         return true;
     }
 
-    private bool IsOppositeDirection(EPlayerMovementType newType)
-    {
-        switch (this.currentMoveType)
-        {
-            case EPlayerMovementType.Up:
-                if (newType == EPlayerMovementType.Down) return true;
-                break;
-            case EPlayerMovementType.Down:
-                if (newType == EPlayerMovementType.Up) return true;
-                break;
-            case EPlayerMovementType.Left:
-                if (newType == EPlayerMovementType.Right) return true;
-                break;
-            case EPlayerMovementType.Right:
-                if (newType == EPlayerMovementType.Left) return true;
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
-
-        return false;
-    }
 
     private void StartMovement()
     {
@@ -69,7 +47,8 @@ public class PlayerMovement : PlayerReference
 
     private IEnumerator MoveCoroutine()
     {
-        Cell nextCell = GetNextCell();
+        Cell nextCell = CharacterVirtual.GetNextCellToMove(this.player.DataHandler.Data.currentCell.DataHandler.Data,
+            this.currentMoveType);
         if (nextCell == null || nextCell.StateMachine.CurrentState == ECellState.Disabled)
         {
             OnMovementCompleted();
@@ -98,7 +77,7 @@ public class PlayerMovement : PlayerReference
 
         // Ensure the final position is accurate  
         player.transform.position = targetPosition;
-        this.player.Data.SetCurrentCell(nextCell);
+        this.player.DataHandler.SetCurrentCell(nextCell);
         nextCell.StateMachine.ChangeState(ECellState.Thin);
 
         //Loop Movement
@@ -117,19 +96,6 @@ public class PlayerMovement : PlayerReference
     public void ResetRemainingMoveCount()
     {
         this.remainingMoveCount = 3;
-    }
-
-    private Cell GetNextCell()
-    {
-        var currentCell = this.player.Data.ModelData.currentCell.Data.ModelData;
-        return currentMoveType switch
-        {
-            EPlayerMovementType.Up => currentCell.upCell,
-            EPlayerMovementType.Down => currentCell.downCell,
-            EPlayerMovementType.Left => currentCell.leftCell,
-            EPlayerMovementType.Right => currentCell.rightCell,
-            _ => throw new ArgumentOutOfRangeException(nameof(currentMoveType), currentMoveType, null)
-        };
     }
 
     public void SetIsStopping(bool value)

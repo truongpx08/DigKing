@@ -7,8 +7,8 @@ using UnityEngine;
 
 public class Cell : TruongMonoBehaviour
 {
-    [SerializeField] private CellData data;
-    public CellData Data => this.data;
+    [SerializeField] private CellDataHandler dataHandler;
+    public CellDataHandler DataHandler => this.dataHandler;
     [SerializeField] private CellInitializer initializer;
     public CellInitializer Initializer => this.initializer;
     [SerializeField] private SpriteRenderer model;
@@ -33,7 +33,7 @@ public class Cell : TruongMonoBehaviour
 
     private void LoadData()
     {
-        this.data = GetComponentInChildren<CellData>();
+        this.dataHandler = GetComponentInChildren<CellDataHandler>();
     }
 
     private void LoadInitializer()
@@ -46,10 +46,10 @@ public class Cell : TruongMonoBehaviour
         // Define an array of neighboring cells  
         Cell[] neighbors =
         {
-            this.data.ModelData.upCell,
-            this.data.ModelData.downCell,
-            this.data.ModelData.leftCell,
-            this.data.ModelData.rightCell
+            this.dataHandler.Data.upCell,
+            this.dataHandler.Data.downCell,
+            this.dataHandler.Data.leftCell,
+            this.dataHandler.Data.rightCell
         };
 
         foreach (var cell in neighbors)
@@ -60,7 +60,7 @@ public class Cell : TruongMonoBehaviour
             }
         }
 
-        Debug.Log($"No unprocessed thick cell found for x:{this.data.ModelData.x} y:{this.data.ModelData.y}.");
+        Debug.Log($"No unprocessed thick cell found for x:{this.dataHandler.Data.x} y:{this.dataHandler.Data.y}.");
         return null; // Return null if no unprocessed thick cell is found  
     }
 
@@ -69,10 +69,10 @@ public class Cell : TruongMonoBehaviour
         // Define an array of neighboring cells  
         Cell[] neighbors =
         {
-            this.data.ModelData.upCell,
-            this.data.ModelData.downCell,
-            this.data.ModelData.leftCell,
-            this.data.ModelData.rightCell
+            this.dataHandler.Data.upCell,
+            this.dataHandler.Data.downCell,
+            this.dataHandler.Data.leftCell,
+            this.dataHandler.Data.rightCell
         };
 
         return neighbors; // Return null if no unprocessed thick cell is found  
@@ -87,10 +87,10 @@ public class Cell : TruongMonoBehaviour
         var _4Neighbors = Get4AdjacentCells();
 
         // Điền các ô chéo vào mảng neighbors  
-        neighbors[0] = this.data.ModelData.upLeftCell;
-        neighbors[1] = this.data.ModelData.upRightCell;
-        neighbors[2] = this.data.ModelData.downLeftCell;
-        neighbors[3] = this.data.ModelData.downRightCell;
+        neighbors[0] = this.dataHandler.Data.upLeftCell;
+        neighbors[1] = this.dataHandler.Data.upRightCell;
+        neighbors[2] = this.dataHandler.Data.downLeftCell;
+        neighbors[3] = this.dataHandler.Data.downRightCell;
 
         // Điền các ô lân cận còn lại vào mảng neighbors  
         Array.Copy(_4Neighbors, 0, neighbors, 4, 4);
@@ -102,7 +102,7 @@ public class Cell : TruongMonoBehaviour
     {
         return cell != null &&
                !cell.IsProcessed &&
-               cell.data.ModelData.type == ECellType.Thick;
+               cell.dataHandler.Data.type == ECellType.Thick;
     }
 
     public void SetIsProcessed(bool processed)
@@ -119,6 +119,29 @@ public class Cell : TruongMonoBehaviour
 
     public bool IsThisCell(int x, int y)
     {
-        return Data.ModelData.x == x && Data.ModelData.y == y;
+        return DataHandler.Data.x == x && DataHandler.Data.y == y;
+    }
+
+    public EDirectionType GetDirection(Cell adjacentCell)
+    {
+        var data = this.dataHandler.Data;
+        if (data.upCell == adjacentCell) return EDirectionType.Up;
+        if (data.downCell == adjacentCell) return EDirectionType.Down;
+        if (data.leftCell == adjacentCell) return EDirectionType.Left;
+        if (data.rightCell == adjacentCell) return EDirectionType.Right;
+        return EDirectionType.Down;
+    }
+
+    public Cell GetCellWithDirection(EDirectionType oppositeDirection)
+    {
+        var data = this.dataHandler.Data;
+        return oppositeDirection switch
+        {
+            EDirectionType.Up => data.upCell,
+            EDirectionType.Down => data.downCell,
+            EDirectionType.Left => data.leftCell,
+            EDirectionType.Right => data.rightCell,
+            _ => throw new ArgumentOutOfRangeException(nameof(oppositeDirection), oppositeDirection, null)
+        };
     }
 }

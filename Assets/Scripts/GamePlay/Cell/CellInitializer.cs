@@ -11,42 +11,42 @@ public class CellInitializer : CellReference
     {
         AddPosition();
         AddName();
-        this.cell.StateMachine.ChangeState(this.Data.type == ECellType.Thick ? ECellState.Think : ECellState.Thin);
+        this.cellRef.StateMachine.ChangeState(this.DataRef.type == ECellType.Thick ? ECellState.Think : ECellState.Thin);
     }
 
     private void AddName()
     {
-        this.cell.name = $"Cell_{this.Data.x}_{this.Data.y}";
+        this.cellRef.name = $"Cell_{this.DataRef.x}_{this.DataRef.y}";
     }
 
     private void AddPosition()
     {
         var space = Map.Instance.Generator.Space;
-        Vector3 position = new Vector3(this.Data.x / space, this.Data.y / space, 0);
-        this.cell.transform.localPosition = position;
+        Vector3 position = new Vector3(this.DataRef.x / space, this.DataRef.y / space, 0);
+        this.cellRef.transform.localPosition = position;
     }
 
     public void AddAdjacentCells()
     {
         this.MapGenerator.CellList.ForEach(cellItem =>
         {
-            if (cellItem.IsThisCell(this.Data.x, this.Data.y + 1))
-                this.Data.upCell = cellItem;
-            if (cellItem.IsThisCell(this.Data.x, this.Data.y - 1))
-                this.Data.downCell = cellItem;
-            if (cellItem.IsThisCell(this.Data.x - 1, this.Data.y))
-                this.Data.leftCell = cellItem;
-            if (cellItem.IsThisCell(this.Data.x + 1, this.Data.y))
-                this.Data.rightCell = cellItem;
+            if (cellItem.IsThisCell(this.DataRef.x, this.DataRef.y + 1))
+                this.DataRef.upCell = cellItem;
+            if (cellItem.IsThisCell(this.DataRef.x, this.DataRef.y - 1))
+                this.DataRef.downCell = cellItem;
+            if (cellItem.IsThisCell(this.DataRef.x - 1, this.DataRef.y))
+                this.DataRef.leftCell = cellItem;
+            if (cellItem.IsThisCell(this.DataRef.x + 1, this.DataRef.y))
+                this.DataRef.rightCell = cellItem;
 
-            if (cellItem.IsThisCell(this.Data.x - 1, this.Data.y + 1))
-                this.Data.upLeftCell = cellItem;
-            if (cellItem.IsThisCell(this.Data.x + 1, this.Data.y + 1))
-                this.Data.upRightCell = cellItem;
-            if (cellItem.IsThisCell(this.Data.x - 1, this.Data.y - 1))
-                this.Data.downLeftCell = cellItem;
-            if (cellItem.IsThisCell(this.Data.x + 1, this.Data.y - 1))
-                this.Data.downRightCell = cellItem;
+            if (cellItem.IsThisCell(this.DataRef.x - 1, this.DataRef.y + 1))
+                this.DataRef.upLeftCell = cellItem;
+            if (cellItem.IsThisCell(this.DataRef.x + 1, this.DataRef.y + 1))
+                this.DataRef.upRightCell = cellItem;
+            if (cellItem.IsThisCell(this.DataRef.x - 1, this.DataRef.y - 1))
+                this.DataRef.downLeftCell = cellItem;
+            if (cellItem.IsThisCell(this.DataRef.x + 1, this.DataRef.y - 1))
+                this.DataRef.downRightCell = cellItem;
         });
     }
 }
