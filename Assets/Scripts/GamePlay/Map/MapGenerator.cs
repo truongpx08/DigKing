@@ -18,7 +18,6 @@ public class MapGenerator : TruongMonoBehaviour
     [Button]
     public void GenerateMap()
     {
-        RemoveChildren();
         this.cellList.Clear();
         var count = 0;
 

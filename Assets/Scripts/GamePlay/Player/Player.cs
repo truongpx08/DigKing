@@ -4,33 +4,25 @@ using UnityEngine;
 
 public class Player : TruongSingleton<Player>
 {
-    [SerializeField] private PlayerInitializer initializer;
-    public PlayerInitializer Initializer => this.initializer;
-    [SerializeField] private PlayerMovement movement;
-    public PlayerMovement Movement => movement;
     [SerializeField] private PlayerDataHandler dataHandler;
     public PlayerDataHandler DataHandler => this.dataHandler;
+    [SerializeField] private PlayerStateMachine stateMachine;
+    public PlayerStateMachine StateMachine => this.stateMachine;
 
     protected override void LoadComponents()
     {
         base.LoadComponents();
         LoadData();
-        LoadMovement();
-        LoadInitializer();
+        LoadStateMachine();
+    }
+
+    private void LoadStateMachine()
+    {
+        this.stateMachine = GetComponentInChildren<PlayerStateMachine>();
     }
 
     private void LoadData()
     {
         this.dataHandler = GetComponentInChildren<PlayerDataHandler>();
-    }
-
-    private void LoadMovement()
-    {
-        this.movement = GetComponentInChildren<PlayerMovement>();
-    }
-
-    private void LoadInitializer()
-    {
-        this.initializer = GetComponentInChildren<PlayerInitializer>();
     }
 }

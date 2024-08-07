@@ -3,14 +3,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerInput : MonoBehaviour
+public enum EDirectionType
+{
+    Up,
+    Down,
+    Left,
+    Right,
+}
+
+public class PlayerInput : TruongSingleton<PlayerInput>
 {
     private Vector2 mouseStartPosition;
     private Vector2 mouseEndPosition;
     private bool isDragging = false;
-    private float dragThreshold = 50f; // Threshold to determine a drag  
+    private const float DragThreshold = 50f; // Threshold to determine a drag  
 
-    private void Update()
+    [SerializeField] private EDirectionType direction;
+    public EDirectionType Direction => direction;
+
+    protected override void Update()
     {
         // Check if the mouse is being pressed down  
         if (Input.GetMouseButtonDown(0)) // 0 corresponds to the left mouse button  
@@ -42,22 +53,22 @@ public class PlayerInput : MonoBehaviour
         // Check drag along the X axis  
         if (Mathf.Abs(dragDistanceX) > Mathf.Abs(dragDistanceY)) // Dragging horizontally  
         {
-            if (dragDistanceX > dragThreshold)
+            if (dragDistanceX > DragThreshold)
             {
                 OnDragRight();
             }
-            else if (dragDistanceX < -dragThreshold)
+            else if (dragDistanceX < -DragThreshold)
             {
                 OnDragLeft();
             }
         }
         else // Dragging vertically  
         {
-            if (dragDistanceY > dragThreshold)
+            if (dragDistanceY > DragThreshold)
             {
                 OnDragUp();
             }
-            else if (dragDistanceY < -dragThreshold)
+            else if (dragDistanceY < -DragThreshold)
             {
                 OnDragDown();
             }
@@ -67,24 +78,33 @@ public class PlayerInput : MonoBehaviour
     private void OnDragUp()
     {
         Debug.Log("Dragged up");
-        Player.Instance.Movement.Move(EDirectionType.Up);
+        SetDirection(EDirectionType.Up);
+        Player.Instance.StateMachine.ChangeState(EPlayerState.Movement);
     }
 
     private void OnDragDown()
     {
         Debug.Log("Dragged down");
-        Player.Instance.Movement.Move(EDirectionType.Down);
+        SetDirection(EDirectionType.Down);
+        Player.Instance.StateMachine.ChangeState(EPlayerState.Movement);
     }
 
     private void OnDragLeft()
     {
         Debug.Log("Dragged left");
-        Player.Instance.Movement.Move(EDirectionType.Left);
+        SetDirection(EDirectionType.Left);
+        Player.Instance.StateMachine.ChangeState(EPlayerState.Movement);
     }
 
     private void OnDragRight()
     {
         Debug.Log("Dragged right");
-        Player.Instance.Movement.Move(EDirectionType.Right);
+        SetDirection(EDirectionType.Right);
+        Player.Instance.StateMachine.ChangeState(EPlayerState.Movement);
+    }
+
+    private void SetDirection(EDirectionType up)
+    {
+        this.direction = up;
     }
 }

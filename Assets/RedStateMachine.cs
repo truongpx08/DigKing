@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -11,39 +10,36 @@ public enum ERedState
 {
     Initial,
     Movement,
-    Attack,
     Disabled,
 }
 
 public class RedStateMachine : TruongMonoBehaviour
 {
-    private TruongStateMachine _stateMachine;
+    private TruongStateMachine stateMachine;
     private RedInitialState initialState;
     private RedMovementState movementState;
     private RedDisabledState disabledState;
 
     public void ChangeState(ERedState nextState)
     {
-        if (this._stateMachine == null)
-            _stateMachine = new TruongStateMachine();
+        if (this.stateMachine == null)
+            stateMachine = new TruongStateMachine();
         switch (nextState)
         {
             case ERedState.Initial:
                 if (!HasComponent<RedInitialState>())
                     this.initialState = gameObject.AddComponent<RedInitialState>();
-                _stateMachine?.ChangeState(initialState);
+                stateMachine?.ChangeState(initialState);
                 break;
             case ERedState.Movement:
                 if (!HasComponent<RedMovementState>())
                     this.movementState = gameObject.AddComponent<RedMovementState>();
-                _stateMachine?.ChangeState(movementState);
-                break;
-            case ERedState.Attack:
+                stateMachine?.ChangeState(movementState);
                 break;
             case ERedState.Disabled:
                 if (!HasComponent<RedDisabledState>())
                     this.disabledState = gameObject.AddComponent<RedDisabledState>();
-                _stateMachine?.ChangeState(disabledState);
+                stateMachine?.ChangeState(disabledState);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(nextState), nextState, null);
