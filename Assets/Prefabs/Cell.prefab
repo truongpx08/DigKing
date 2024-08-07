@@ -44,8 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 835c52b588897b546b5710a505f0b23c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cell: {fileID: 4386860471723804679}
-  modelData:
+  cellRef: {fileID: 4386860471723804679}
+  data:
+    id: 0
     type: 0
     x: 0
     y: 0
@@ -53,6 +54,10 @@ MonoBehaviour:
     downCell: {fileID: 0}
     leftCell: {fileID: 0}
     rightCell: {fileID: 0}
+    upLeftCell: {fileID: 0}
+    upRightCell: {fileID: 0}
+    downLeftCell: {fileID: 0}
+    downRightCell: {fileID: 0}
 --- !u!1 &6809263679741955952
 GameObject:
   m_ObjectHideFlags: 0
@@ -97,7 +102,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bef361068744a454392ecca50ff247e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cell: {fileID: 4386860471723804679}
+  currentState: 0
 --- !u!1 &7169229997664688314
 GameObject:
   m_ObjectHideFlags: 0
@@ -212,10 +217,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 865664112800995714}
-  - {fileID: 2713153615856788509}
-  - {fileID: 3067454244388694988}
   - {fileID: 5555763518977142228}
+  - {fileID: 865664112800995714}
+  - {fileID: 3067454244388694988}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4386860471723804679
@@ -230,53 +234,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 861fae087ca7c6a4a91a53ca13404b6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 8513324126434992249}
-  initializer: {fileID: 9089647677682988449}
+  dataHandler: {fileID: 8513324126434992249}
   model: {fileID: 802902869251217201}
   isProcessed: 0
   stateMachine: {fileID: 6503697718865271887}
---- !u!1 &9013578611217036358
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2713153615856788509}
-  - component: {fileID: 9089647677682988449}
-  m_Layer: 0
-  m_Name: Initializer
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2713153615856788509
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9013578611217036358}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6545272525262698724}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9089647677682988449
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9013578611217036358}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a350990ab52320458d045ed1a3537f5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cell: {fileID: 4386860471723804679}

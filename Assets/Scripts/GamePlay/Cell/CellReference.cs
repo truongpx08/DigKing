@@ -8,14 +8,9 @@ public class CellReference : TruongMonoBehaviour
     protected CellData DataRef => this.cellRef.DataHandler.Data;
     protected MapGenerator MapGenerator => Map.Instance.Generator;
 
-    protected override void LoadComponents()
+    protected void LoadCellReference()
     {
-        base.LoadComponents();
-        LoadCell();
-    }
-
-    private void LoadCell()
-    {
-        this.cellRef = GetComponentInParent<Cell>();
+        if (this.cellRef == null)
+            this.cellRef = GetComponentInParent<Cell>();
     }
 }

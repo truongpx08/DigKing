@@ -18,8 +18,7 @@ public class PlayerStateMachine : TruongMonoBehaviour
 {
     private TruongStateMachine stateMachine;
     private PlayerInitialState initialState;
-    private PlayerMovementState movementState;
-    public PlayerMovementState MovementState => this.movementState;
+    public PlayerMovementState MovementState { get; private set; }
     private PlayerDisabledState disabledState;
 
     public void ChangeState(EPlayerState nextState)
@@ -34,7 +33,7 @@ public class PlayerStateMachine : TruongMonoBehaviour
                 stateMachine?.ChangeState(initialState);
                 break;
             case EPlayerState.Movement:
-                stateMachine?.ChangeState(this.movementState);
+                stateMachine?.ChangeState(this.MovementState);
                 break;
             case EPlayerState.Disabled:
                 if (!HasComponent<PlayerDisabledState>())
@@ -49,15 +48,15 @@ public class PlayerStateMachine : TruongMonoBehaviour
 
     public void SetMovementState()
     {
-        if (this.movementState != null) return;
+        if (this.MovementState != null) return;
 
         if (HasComponent<PlayerDisabledState>())
         {
-            this.movementState = gameObject.GetComponent<PlayerMovementState>();
+            this.MovementState = gameObject.GetComponent<PlayerMovementState>();
             return;
         }
 
-        this.movementState = gameObject.AddComponent<PlayerMovementState>();
+        this.MovementState = gameObject.AddComponent<PlayerMovementState>();
     }
 }
 

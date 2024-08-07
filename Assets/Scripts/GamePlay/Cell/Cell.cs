@@ -9,8 +9,6 @@ public class Cell : TruongMonoBehaviour
 {
     [SerializeField] private CellDataHandler dataHandler;
     public CellDataHandler DataHandler => this.dataHandler;
-    [SerializeField] private CellInitializer initializer;
-    public CellInitializer Initializer => this.initializer;
     [SerializeField] private SpriteRenderer model;
     [SerializeField] private bool isProcessed;
     public bool IsProcessed => this.isProcessed;
@@ -23,7 +21,6 @@ public class Cell : TruongMonoBehaviour
         base.LoadComponents();
         LoadStateMachine();
         LoadData();
-        LoadInitializer();
     }
 
     private void LoadStateMachine()
@@ -34,11 +31,6 @@ public class Cell : TruongMonoBehaviour
     private void LoadData()
     {
         this.dataHandler = GetComponentInChildren<CellDataHandler>();
-    }
-
-    private void LoadInitializer()
-    {
-        this.initializer = GetComponentInChildren<CellInitializer>();
     }
 
     public Cell FindNextUnprocessedThickCell()

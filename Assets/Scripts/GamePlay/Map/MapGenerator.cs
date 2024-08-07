@@ -15,6 +15,10 @@ public class MapGenerator : TruongMonoBehaviour
     [SerializeField] private float space;
     public float Space => space;
 
+    public void ResetMap()
+    {
+    }
+
     [Button]
     public void GenerateMap()
     {
@@ -27,14 +31,14 @@ public class MapGenerator : TruongMonoBehaviour
             {
                 var cell = Instantiate(cellPrefab, this.transform);
                 cell.DataHandler.AddData(count, x, y);
-                cell.Initializer.Initialize();
+                cell.StateMachine.ChangeState(ECellState.Initial);
 
                 this.cellList.Add(cell);
                 count++;
             }
         }
 
-        this.cellList.ForEach(cell => { cell.Initializer.AddAdjacentCells(); });
+        this.cellList.ForEach(cell => { cell.StateMachine.InitialState.AddAdjacentCells(); });
     }
 
 
