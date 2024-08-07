@@ -7,14 +7,14 @@ using UnityEngine;
 
 public class Cell : TruongMonoBehaviour
 {
+    [SerializeField] private CellStateMachine stateMachine;
+    public CellStateMachine StateMachine => this.stateMachine;
     [SerializeField] private CellDataHandler dataHandler;
     public CellDataHandler DataHandler => this.dataHandler;
     [SerializeField] private SpriteRenderer model;
     [SerializeField] private bool isProcessed;
     public bool IsProcessed => this.isProcessed;
     public SpriteRenderer Model => this.model;
-    [SerializeField] private CellStateMachine stateMachine;
-    public CellStateMachine StateMachine => this.stateMachine;
 
     protected override void LoadComponents()
     {
@@ -94,7 +94,7 @@ public class Cell : TruongMonoBehaviour
     {
         return cell != null &&
                !cell.IsProcessed &&
-               cell.dataHandler.Data.type == ECellType.Thick;
+               cell.stateMachine.CurrentState == ECellState.Thick;
     }
 
     public void SetIsProcessed(bool processed)
@@ -106,7 +106,7 @@ public class Cell : TruongMonoBehaviour
     public bool IsBreakableBorder()
     {
         var cells = Get8AdjacentCells();
-        return cells.All(c => c == null || c.stateMachine.CurrentState != ECellState.Think);
+        return cells.All(c => c == null || c.stateMachine.CurrentState != ECellState.Thick);
     }
 
     public bool IsThisCell(int x, int y)

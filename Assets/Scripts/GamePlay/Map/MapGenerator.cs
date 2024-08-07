@@ -15,43 +15,44 @@ public class MapGenerator : TruongMonoBehaviour
     [SerializeField] private float space;
     public float Space => space;
 
-    public void ResetMap()
+    public void Initial()
     {
+        if (this.cellList.Count == 0)
+            GenerateMap();
+        else
+            ResetMap();
+    }
+
+    private void ResetMap()
+    {
+        foreach (var cell in this.cellList)
+        {
+            cell.StateMachine.ChangeState(ECellState.Initial);
+        }
     }
 
     [Button]
-    public void GenerateMap()
+    private void GenerateMap()
     {
+        // Clear existing cell list and initialize the capacity  
         this.cellList.Clear();
-        var count = 0;
+        this.cellList.Capacity = width * height;
 
+        // Initialize the cells  
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
                 var cell = Instantiate(cellPrefab, this.transform);
-                cell.DataHandler.AddData(count, x, y);
+                cell.DataHandler.AddData(x, y);
                 cell.StateMachine.ChangeState(ECellState.Initial);
-
                 this.cellList.Add(cell);
-                count++;
             }
         }
 
-        this.cellList.ForEach(cell => { cell.StateMachine.InitialState.AddAdjacentCells(); });
-    }
-
-
-    private void RemoveChildren()
-    {
-        foreach (Transform child in transform)
+        foreach (var cell in this.cellList)
         {
-            Destroy(child.gameObject);
+            cell.StateMachine.InitialState.AddAdjacentCells();
         }
-    }
-
-    public Cell FindCell(int x, int y)
-    {
-        return this.cellList.Find(cell => cell.DataHandler.Data.x == x && cell.DataHandler.Data.y == y);
     }
 }

@@ -63,8 +63,6 @@ public class PlayerStateMachine : TruongMonoBehaviour
 public class PlayerBaseState : TruongMonoBehaviour
 {
     [SerializeField] protected Player player;
-    protected Cell CurrentCell => this.player.DataHandler.Data.currentCell;
-    protected CellData CurrentCellData => CurrentCell.DataHandler.Data;
 
     protected void LoadPlayerReference()
     {
@@ -79,6 +77,8 @@ public class PlayerInitialState : PlayerBaseState, IEnterState
     public void Enter()
     {
         LoadPlayerReference();
+
+        EnableGo(player);
 
         var currentCell = Map.Instance.GetRandomThinCell();
         if (currentCell != null)
@@ -137,7 +137,7 @@ public class PlayerMovementState : PlayerBaseState, IEnterState
             yield break; // Exit if there is no next cell  
         }
 
-        if (shouldReduceRemainingMoves && nextCell.StateMachine.CurrentState == ECellState.Think)
+        if (shouldReduceRemainingMoves && nextCell.StateMachine.CurrentState == ECellState.Thick)
         {
             this.shouldReduceRemainingMoves = false;
 
@@ -191,7 +191,7 @@ public class PlayerDisabledState : PlayerBaseState, IEnterState
     public void Enter()
     {
         LoadPlayerReference();
-        
+
         DisableGo(player);
         GamePlayManager.Instance.Initialize();
     }

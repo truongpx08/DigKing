@@ -67,6 +67,8 @@ public class RedInitialState : RedBaseState, IEnterState
     public void Enter()
     {
         LoadRedReference();
+        
+        EnableGo(red);
 
         var currentCell = Map.Instance.GetRandomThinCell();
         if (currentCell != null)
@@ -135,7 +137,7 @@ public class RedMovementState : RedBaseState, IEnterState
         }
 
         Cell nextCell = CharacterVirtual.GetNextCellToMove(CurrentCellData, this.movementType);
-        if (nextCell == null || nextCell.StateMachine.CurrentState is ECellState.Disabled or ECellState.Think)
+        if (nextCell == null || nextCell.StateMachine.CurrentState is ECellState.Disabled or ECellState.Thick)
         {
             //Navigation
             this.nextCellToMove = FindRandomThinCellForNavigation();

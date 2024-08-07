@@ -30,21 +30,21 @@ public class Map : TruongSingleton<Map>
     [Button]
     public List<Cell> GetThinCell()
     {
-        return GetCellsWithType(ECellType.Thin);
+        return GetCellsWithType(ECellState.Thin);
     }
 
     [Button]
     public List<Cell> GetThickCell()
     {
-        return GetCellsWithType(ECellType.Thick);
+        return GetCellsWithType(ECellState.Thick);
     }
 
-    private List<Cell> GetCellsWithType(ECellType type)
+    private List<Cell> GetCellsWithType(ECellState type)
     {
         List<Cell> cells = new List<Cell>();
         this.generator.CellList.ForEach(cell =>
         {
-            if (cell.DataHandler.Data.type == type)
+            if (cell.StateMachine.CurrentState == type)
                 cells.Add(cell);
         });
         return cells;
@@ -54,7 +54,7 @@ public class Map : TruongSingleton<Map>
     {
         // Find the first unprocessed thick cell  
         return generator.CellList.Find(item =>
-            item.DataHandler.Data.type == ECellType.Thick && !item.IsProcessed);
+            item.StateMachine.CurrentState == ECellState.Thick && !item.IsProcessed);
     }
 
     public Cell GetRandomThinCell()

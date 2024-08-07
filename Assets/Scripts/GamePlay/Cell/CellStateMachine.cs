@@ -9,7 +9,7 @@ public enum ECellState
 {
     Initial,
     Thin,
-    Think,
+    Thick,
     Disabled,
 }
 
@@ -21,7 +21,7 @@ public class CellStateMachine : TruongMonoBehaviour
     private TruongStateMachine stateMachine;
     public CellInitialState InitialState { get; private set; }
     private CellThinState thinState;
-    private CellThinkState thinkState;
+    private CellThickState thickState;
     private CellDisabledState disabledState;
 
 
@@ -43,10 +43,10 @@ public class CellStateMachine : TruongMonoBehaviour
                     this.thinState = gameObject.AddComponent<CellThinState>();
                 stateMachine?.ChangeState(thinState);
                 break;
-            case ECellState.Think:
-                if (!HasComponent<CellThinkState>())
-                    this.thinkState = gameObject.AddComponent<CellThinkState>();
-                stateMachine?.ChangeState(thinkState);
+            case ECellState.Thick:
+                if (!HasComponent<CellThickState>())
+                    this.thickState = gameObject.AddComponent<CellThickState>();
+                stateMachine?.ChangeState(thickState);
                 break;
             case ECellState.Disabled:
                 if (!HasComponent<CellDisabledState>())
@@ -74,22 +74,34 @@ public class CellInitialState : CellBaseState, IEnterState
 
         AddPosition();
         AddName();
-        this.cellRef.StateMachine.ChangeState(
-            this.DataRef.type == ECellType.Thick
-                ? ECellState.Think
-                : ECellState.Thin);
+        var nextState = GetNextState(DataRef.x, DataRef.y);
+        this.cell.StateMachine.ChangeState(nextState);
     }
+
+    private ECellState GetNextState(int x, int y)
+    {
+        if (x == 0)
+            return ECellState.Thin;
+        if (x == MapGenerator.Width - 1)
+            return ECellState.Thin;
+        if (y == 0)
+            return ECellState.Thin;
+        if (y == MapGenerator.Height - 1)
+            return ECellState.Thin;
+        return ECellState.Thick;
+    }
+
 
     private void AddName()
     {
-        this.cellRef.name = $"Cell_{this.DataRef.x}_{this.DataRef.y}";
+        this.cell.name = $"Cell_{this.DataRef.x}_{this.DataRef.y}";
     }
 
     private void AddPosition()
     {
         var space = Map.Instance.Generator.Space;
         Vector3 position = new Vector3(this.DataRef.x / space, this.DataRef.y / space, 0);
-        this.cellRef.transform.localPosition = position;
+        this.cell.transform.localPosition = position;
     }
 
     public void AddAdjacentCells()
@@ -123,21 +135,19 @@ public class CellThinState : CellBaseState, IEnterState
     {
         LoadCellReference();
 
-        EnableGo(this.cellRef.Model);
-        this.cellRef.Model.color = Color.cyan;
-        this.cellRef.DataHandler.Data.type = ECellType.Thin;
+        EnableGo(this.cell.Model);
+        this.cell.Model.color = Color.cyan;
     }
 }
 
-public class CellThinkState : CellBaseState, IEnterState
+public class CellThickState : CellBaseState, IEnterState
 {
     public void Enter()
     {
         LoadCellReference();
 
-        EnableGo(this.cellRef.Model);
-        this.cellRef.Model.color = Color.white;
-        this.cellRef.DataHandler.Data.type = ECellType.Thick;
+        EnableGo(this.cell.Model);
+        this.cell.Model.color = Color.white;
     }
 }
 
@@ -147,6 +157,6 @@ public class CellDisabledState : CellBaseState, IEnterState
     {
         LoadCellReference();
 
-        DisableGo(this.cellRef.Model);
+        DisableGo(this.cell.Model);
     }
 }

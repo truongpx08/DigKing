@@ -63,8 +63,7 @@ public class MapCollapse : TruongMonoBehaviour
 
             foreach (var cell in cells)
             {
-                // Kiểm tra kiểu của ô trước khi gọi phương thức  
-                if (cell.DataHandler.Data.type != ECellType.Thin) continue;
+                if (cell.StateMachine.CurrentState != ECellState.Thin) continue;
 
                 // Kiểm tra xem ô có phải là biên có thể phá hủy không  
                 if (cell.IsBreakableBorder())

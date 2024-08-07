@@ -15,7 +15,7 @@ public class GamePlayManager : TruongSingleton<GamePlayManager>
     [Button]
     public void Initialize()
     {
-        Map.Instance.Generator.GenerateMap();
+        Map.Instance.Generator.Initial();
         Player.Instance.StateMachine.ChangeState(EPlayerState.Initial);
         Red.Instance.StateMachine.ChangeState(ERedState.Initial);
     }

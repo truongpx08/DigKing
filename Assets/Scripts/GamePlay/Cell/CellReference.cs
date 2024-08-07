@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class CellReference : TruongMonoBehaviour
 {
-    [SerializeField] protected Cell cellRef;
-    protected CellData DataRef => this.cellRef.DataHandler.Data;
+    [SerializeField] protected Cell cell;
+    protected CellData DataRef => this.cell.DataHandler.Data;
     protected MapGenerator MapGenerator => Map.Instance.Generator;
 
     protected void LoadCellReference()
     {
-        if (this.cellRef == null)
-            this.cellRef = GetComponentInParent<Cell>();
+        if (this.cell == null)
+            this.cell = GetComponentInParent<Cell>();
     }
 }
