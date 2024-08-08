@@ -6,39 +6,39 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 [Serializable]
-public enum ERedState
+public enum EEnemyState
 {
     Initial,
     Movement,
     Disabled,
 }
 
-public class RedStateMachine : TruongMonoBehaviour
+public class EnemyStateMachine : TruongMonoBehaviour
 {
     private TruongStateMachine stateMachine;
-    private RedInitialState initialState;
-    private RedMovementState movementState;
-    private RedDisabledState disabledState;
+    private EnemyInitialState initialState;
+    private EnemyMovementState movementState;
+    private EnemyDisabledState disabledState;
 
-    public void ChangeState(ERedState nextState)
+    public void ChangeState(EEnemyState nextState)
     {
         if (this.stateMachine == null)
             stateMachine = new TruongStateMachine();
         switch (nextState)
         {
-            case ERedState.Initial:
-                if (!HasComponent<RedInitialState>())
-                    this.initialState = gameObject.AddComponent<RedInitialState>();
+            case EEnemyState.Initial:
+                if (!HasComponent<EnemyInitialState>())
+                    this.initialState = gameObject.AddComponent<EnemyInitialState>();
                 stateMachine?.ChangeState(initialState);
                 break;
-            case ERedState.Movement:
-                if (!HasComponent<RedMovementState>())
-                    this.movementState = gameObject.AddComponent<RedMovementState>();
+            case EEnemyState.Movement:
+                if (!HasComponent<EnemyMovementState>())
+                    this.movementState = gameObject.AddComponent<EnemyMovementState>();
                 stateMachine?.ChangeState(movementState);
                 break;
-            case ERedState.Disabled:
-                if (!HasComponent<RedDisabledState>())
-                    this.disabledState = gameObject.AddComponent<RedDisabledState>();
+            case EEnemyState.Disabled:
+                if (!HasComponent<EnemyDisabledState>())
+                    this.disabledState = gameObject.AddComponent<EnemyDisabledState>();
                 stateMachine?.ChangeState(disabledState);
                 break;
             default:
@@ -48,39 +48,39 @@ public class RedStateMachine : TruongMonoBehaviour
 }
 
 
-public class RedBaseState : TruongMonoBehaviour
+public class EnemyBaseState : TruongMonoBehaviour
 {
-    [SerializeField] protected Red red;
-    protected Cell CurrentCell => this.red.DataHandler.Data.currentCell;
+    [SerializeField] protected Enemy enemy;
+    protected Cell CurrentCell => this.enemy.DataHandler.Data.currentCell;
     protected CellData CurrentCellData => CurrentCell.DataHandler.Data;
 
-    protected void LoadRedReference()
+    protected void LoadEnemyReference()
     {
-        if (this.red == null)
-            this.red = GetComponentInParent<Red>();
+        if (this.enemy == null)
+            this.enemy = GetComponentInParent<Enemy>();
     }
 }
 
-public class RedInitialState : RedBaseState, IEnterState
+public class EnemyInitialState : EnemyBaseState, IEnterState
 {
     [Button]
     public void Enter()
     {
-        LoadRedReference();
-        
-        EnableGo(red);
+        LoadEnemyReference();
 
-        var currentCell = Map.Instance.GetRandomThinCell();
+        EnableGo(enemy);
+
+        var currentCell = Map.Instance.GetRandomThinCellWithoutCharacter();
         if (currentCell != null)
         {
-            this.red.DataHandler.SetCurrentCell(currentCell);
-            this.red.transform.position = currentCell.transform.position;
-            this.red.StateMachine.ChangeState(ERedState.Movement);
+            this.enemy.DataHandler.SetCurrentCell(currentCell);
+            this.enemy.transform.position = currentCell.transform.position;
+            this.enemy.StateMachine.ChangeState(EEnemyState.Movement);
         }
     }
 }
 
-public class RedMovementState : RedBaseState, IEnterState
+public class EnemyMovementState : EnemyBaseState, IEnterState
 {
     [SerializeField] private EDirectionType movementType;
     [SerializeField] private bool canMove;
@@ -89,7 +89,7 @@ public class RedMovementState : RedBaseState, IEnterState
     [Button]
     public void Enter()
     {
-        LoadRedReference();
+        LoadEnemyReference();
 
         this.nextCellToMove = FindRandomThinCell();
         this.movementType = CurrentCell.GetDirection(nextCellToMove);
@@ -132,7 +132,7 @@ public class RedMovementState : RedBaseState, IEnterState
     {
         if (CurrentCell.StateMachine.CurrentState == ECellState.Disabled)
         {
-            red.StateMachine.ChangeState(ERedState.Disabled);
+            enemy.StateMachine.ChangeState(EEnemyState.Disabled);
             yield break;
         }
 
@@ -146,7 +146,7 @@ public class RedMovementState : RedBaseState, IEnterState
             yield break;
         }
 
-        Vector3 startPosition = red.transform.position;
+        Vector3 startPosition = enemy.transform.position;
         Vector3 targetPosition = nextCell.transform.position;
         float duration = 0.15f; // Movement duration  
         float elapsed = 0f;
@@ -154,14 +154,14 @@ public class RedMovementState : RedBaseState, IEnterState
         while (elapsed < duration)
         {
             // Calculate the new position and move based on the progress  
-            red.transform.position = Vector3.Lerp(startPosition, targetPosition, elapsed / duration);
+            enemy.transform.position = Vector3.Lerp(startPosition, targetPosition, elapsed / duration);
             elapsed += Time.deltaTime;
             yield return null; // Wait for the next frame  
         }
 
         // Ensure the final position is accurate  
-        red.transform.position = targetPosition;
-        this.red.DataHandler.SetCurrentCell(nextCell);
+        enemy.transform.position = targetPosition;
+        this.enemy.DataHandler.SetCurrentCell(nextCell);
 
         LoopMovement();
     }
@@ -173,11 +173,11 @@ public class RedMovementState : RedBaseState, IEnterState
     }
 }
 
-public class RedDisabledState : RedBaseState, IEnterState
+public class EnemyDisabledState : EnemyBaseState, IEnterState
 {
     public void Enter()
     {
-        LoadRedReference();
-        DisableGo(red);
+        LoadEnemyReference();
+        DisableGo(enemy);
     }
 }

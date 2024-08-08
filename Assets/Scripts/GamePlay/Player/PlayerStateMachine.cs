@@ -80,7 +80,7 @@ public class PlayerInitialState : PlayerBaseState, IEnterState
 
         EnableGo(player);
 
-        var currentCell = Map.Instance.GetRandomThinCell();
+        var currentCell = Map.Instance.GetRandomThinCellWithoutCharacter();
         if (currentCell != null)
         {
             this.player.DataHandler.SetCurrentCell(currentCell);

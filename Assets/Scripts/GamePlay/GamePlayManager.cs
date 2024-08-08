@@ -16,7 +16,12 @@ public class GamePlayManager : TruongSingleton<GamePlayManager>
     public void Initialize()
     {
         Map.Instance.Generator.Initial();
+        SpawnCharacter();
+    }
+
+    private void SpawnCharacter()
+    {
         Player.Instance.StateMachine.ChangeState(EPlayerState.Initial);
-        Red.Instance.StateMachine.ChangeState(ERedState.Initial);
+        EnemiesSpawner.Instance.SpawnEnemies();
     }
 }

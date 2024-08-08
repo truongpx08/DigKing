@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class RedData
+public class EnemyData
 {
     public Cell currentCell;
 }
 
-public class RedDataHandler : MonoBehaviour
+public class EnemyDataHandler : MonoBehaviour
 {
-    [SerializeField] private RedData data;
-    public RedData Data => this.data;
+    [SerializeField] private EnemyData data;
+    public EnemyData Data => this.data;
 
     public void SetCurrentCell(Cell currentCell)
     {
