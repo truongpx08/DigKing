@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Cell : TruongMonoBehaviour
 {
@@ -135,5 +136,11 @@ public class Cell : TruongMonoBehaviour
             EDirectionType.Right => data.rightCell,
             _ => throw new ArgumentOutOfRangeException(nameof(oppositeDirection), oppositeDirection, null)
         };
+    }
+
+    public EDirectionType GetRandomDirection()
+    {
+        var list = Enum.GetNames(typeof(EDirectionType));
+        return Enum.Parse<EDirectionType>(list[Random.Range(0, list.Length)]);
     }
 }

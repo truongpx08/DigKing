@@ -75,7 +75,7 @@ public class EnemyInitialState : EnemyBaseState, IEnterState
             EEnemyType.Blue => Map.Instance.GetRandomThickCellWithoutCharacter(),
             _ => null
         };
-        
+
         if (currentCell == null) return;
         this.enemy.DataHandler.SetCurrentCell(currentCell);
         this.enemy.transform.position = currentCell.transform.position;
@@ -85,94 +85,27 @@ public class EnemyInitialState : EnemyBaseState, IEnterState
 
 public class EnemyMovementState : EnemyBaseState, IEnterState
 {
-    [SerializeField] private EDirectionType movementType;
-    [SerializeField] private bool canMove;
-    [SerializeField] private Cell nextCellToMove;
+    private IMovementStrategy movementStrategy;
 
-    [Button]
     public void Enter()
     {
         LoadEnemyReference();
 
-        this.nextCellToMove = FindRandomThinCell();
-        this.movementType = CurrentCell.GetDirection(nextCellToMove);
-
-        this.canMove = this.nextCellToMove != null;
-        if (this.canMove)
-            StartCoroutine(MoveCoroutine());
-    }
-
-    private Cell FindRandomThinCell()
-    {
-        var cells = CurrentCell.Get4AdjacentCells().ToList();
-        var thinCells = cells.FindAll(cell => cell != null && cell.StateMachine.CurrentState == ECellState.Thin);
-        return thinCells.Count == 0 ? null : thinCells[Random.Range(0, thinCells.Count)];
-    }
-
-    private Cell FindRandomThinCellForNavigation()
-    {
-        var cells = CurrentCell.Get4AdjacentCells().ToList();
-        var thinCells = cells.FindAll(cell => cell != null && cell.StateMachine.CurrentState == ECellState.Thin);
-        var oppositeDirection = GetOppositeDirection(this.movementType);
-        var oppositeCell = CurrentCell.GetCellWithDirection(oppositeDirection);
-        if (oppositeCell != null) thinCells.Remove(oppositeCell);
-        return thinCells.Count == 0 ? null : thinCells[Random.Range(0, thinCells.Count)];
-    }
-
-    private EDirectionType GetOppositeDirection(EDirectionType directionType)
-    {
-        return directionType switch
+        switch (enemy.Type)
         {
-            EDirectionType.Up => EDirectionType.Down,
-            EDirectionType.Down => EDirectionType.Up,
-            EDirectionType.Left => EDirectionType.Right,
-            EDirectionType.Right => EDirectionType.Left,
-            _ => throw new ArgumentOutOfRangeException(nameof(directionType), directionType, null)
-        };
-    }
-
-    private IEnumerator MoveCoroutine()
-    {
-        if (CurrentCell.StateMachine.CurrentState == ECellState.Disabled)
-        {
-            enemy.StateMachine.ChangeState(EEnemyState.Disabled);
-            yield break;
+            case EEnemyType.Red:
+                if (!HasComponent<IMovementStrategy>())
+                    this.movementStrategy = gameObject.AddComponent<BorderMovement>();
+                movementStrategy.Move();
+                break;
+            case EEnemyType.Blue:
+                if (!HasComponent<IMovementStrategy>())
+                    this.movementStrategy = gameObject.AddComponent<PingPongMovement>();
+                movementStrategy.Move();
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
-
-        Cell nextCell = CharacterVirtual.GetNextCellToMove(CurrentCellData, this.movementType);
-        if (nextCell == null || nextCell.StateMachine.CurrentState is ECellState.Disabled or ECellState.Thick)
-        {
-            //Navigation
-            this.nextCellToMove = FindRandomThinCellForNavigation();
-            this.movementType = CurrentCell.GetDirection(this.nextCellToMove);
-            LoopMovement();
-            yield break;
-        }
-
-        Vector3 startPosition = enemy.transform.position;
-        Vector3 targetPosition = nextCell.transform.position;
-        float duration = 0.15f; // Movement duration  
-        float elapsed = 0f;
-
-        while (elapsed < duration)
-        {
-            // Calculate the new position and move based on the progress  
-            enemy.transform.position = Vector3.Lerp(startPosition, targetPosition, elapsed / duration);
-            elapsed += Time.deltaTime;
-            yield return null; // Wait for the next frame  
-        }
-
-        // Ensure the final position is accurate  
-        enemy.transform.position = targetPosition;
-        this.enemy.DataHandler.SetCurrentCell(nextCell);
-
-        LoopMovement();
-    }
-
-    private void LoopMovement()
-    {
-        StopAllCoroutines();
-        StartCoroutine(MoveCoroutine()); // Continue moving to the next cell  
     }
 }
 

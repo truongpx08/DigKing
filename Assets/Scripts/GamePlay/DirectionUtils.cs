@@ -1,22 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
-public class CharacterVirtual
+public class DirectionUtils
 {
-    public static Cell GetNextCellToMove(CellData currentCell, EDirectionType moveType)
-    {
-        return moveType switch
-        {
-            EDirectionType.Up => currentCell.upCell,
-            EDirectionType.Down => currentCell.downCell,
-            EDirectionType.Left => currentCell.leftCell,
-            EDirectionType.Right => currentCell.rightCell,
-            _ => throw new ArgumentOutOfRangeException(nameof(moveType), moveType, null)
-        };
-    }
-
     public static bool IsOppositeDirection(EDirectionType newDirection, EDirectionType oldDirection)
     {
         switch (oldDirection)
@@ -38,5 +23,17 @@ public class CharacterVirtual
         }
 
         return false;
+    }
+
+    public static EDirectionType GetOppositeDirection(EDirectionType directionType)
+    {
+        return directionType switch
+        {
+            EDirectionType.Up => EDirectionType.Down,
+            EDirectionType.Down => EDirectionType.Up,
+            EDirectionType.Left => EDirectionType.Right,
+            EDirectionType.Right => EDirectionType.Left,
+            _ => throw new ArgumentOutOfRangeException()
+        };
     }
 }

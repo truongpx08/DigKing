@@ -7,6 +7,7 @@ public class PlayerCollider : PlayerReference
 {
     private void OnTriggerEnter2D(Collider2D col)
     {
+        return;
         // Kiểm tra nếu vật thể va chạm có tag xác định  
         if (col.CompareTag($"Red"))
         {

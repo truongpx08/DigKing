@@ -115,7 +115,7 @@ public class PlayerMovementState : PlayerBaseState, IEnterState
         if (isStopping) return true;
         if (this.remainingMoveCount <= 0) return false;
         if (newType == this.currentMoveType) return false;
-        if (CharacterVirtual.IsOppositeDirection(newType, this.currentMoveType)) return false;
+        if (DirectionUtils.IsOppositeDirection(newType, this.currentMoveType)) return false;
         return true;
     }
 
@@ -129,7 +129,7 @@ public class PlayerMovementState : PlayerBaseState, IEnterState
 
     private IEnumerator MoveCoroutine()
     {
-        Cell nextCell = CharacterVirtual.GetNextCellToMove(this.player.DataHandler.Data.currentCell.DataHandler.Data,
+        Cell nextCell = CharacterUtils.GetNextCellToMove(this.player.DataHandler.Data.currentCell.DataHandler.Data,
             this.currentMoveType);
         if (nextCell == null || nextCell.StateMachine.CurrentState == ECellState.Disabled)
         {
