@@ -76,4 +76,24 @@ public class Map : TruongSingleton<Map>
 
         return cellList[Random.Range(0, cellList.Count)];
     }
+
+    public Cell GetRandomThickCellWithoutCharacter()
+    {
+        var cellList = GetThickCell();
+        //Remove the character from the list
+        var playerCell = Player.Instance.DataHandler.Data.currentCell;
+        if (playerCell != null)
+            cellList.Remove(Player.Instance.DataHandler.Data.currentCell);
+        if (EnemiesSpawner.Instance.EnemyList.Count > 0)
+        {
+            EnemiesSpawner.Instance.EnemyList.ForEach(item =>
+            {
+                var enemyCell = item.DataHandler.Data.currentCell;
+                if (enemyCell != null)
+                    cellList.Remove(enemyCell);
+            });
+        }
+
+        return cellList[Random.Range(0, cellList.Count)];
+    }
 }

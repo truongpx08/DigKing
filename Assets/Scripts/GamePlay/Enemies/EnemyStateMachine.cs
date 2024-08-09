@@ -69,14 +69,17 @@ public class EnemyInitialState : EnemyBaseState, IEnterState
         LoadEnemyReference();
 
         EnableGo(enemy);
-
-        var currentCell = Map.Instance.GetRandomThinCellWithoutCharacter();
-        if (currentCell != null)
+        Cell currentCell = enemy.Type switch
         {
-            this.enemy.DataHandler.SetCurrentCell(currentCell);
-            this.enemy.transform.position = currentCell.transform.position;
-            this.enemy.StateMachine.ChangeState(EEnemyState.Movement);
-        }
+            EEnemyType.Red => Map.Instance.GetRandomThinCellWithoutCharacter(),
+            EEnemyType.Blue => Map.Instance.GetRandomThickCellWithoutCharacter(),
+            _ => null
+        };
+        
+        if (currentCell == null) return;
+        this.enemy.DataHandler.SetCurrentCell(currentCell);
+        this.enemy.transform.position = currentCell.transform.position;
+        this.enemy.StateMachine.ChangeState(EEnemyState.Movement);
     }
 }
 

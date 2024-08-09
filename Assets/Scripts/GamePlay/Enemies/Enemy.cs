@@ -11,6 +11,7 @@ public enum EEnemyType
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private EEnemyType type;
+    public EEnemyType Type => type;
     [SerializeField] private EnemyStateMachine stateMachine;
     public EnemyStateMachine StateMachine => this.stateMachine;
     [SerializeField] private EnemyDataHandler dataHandler;
