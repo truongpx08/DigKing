@@ -5,7 +5,12 @@ using UnityEngine;
 public enum EEnemyType
 {
     Red,
-    Blue,
+    Orange,
+    // Yellow,
+    // Green,
+    // Blue,
+    // Indigo,
+    // Violet
 }
 
 public class Enemy : MonoBehaviour

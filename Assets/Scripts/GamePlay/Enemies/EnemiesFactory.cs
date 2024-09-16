@@ -20,14 +20,14 @@ public class EnemiesFactory : MonoBehaviour
         return type switch
         {
             EEnemyType.Red => GetRedPrefab(),
-            EEnemyType.Blue => GetBluePrefab(),
+            EEnemyType.Orange => GetBluePrefab(),
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
         };
     }
 
     private Enemy GetBluePrefab()
     {
-        if (this.bluePrefab == null) this.bluePrefab = DataManager.Instance.Enemies.GetEnemy(EEnemyType.Blue).prefab;
+        if (this.bluePrefab == null) this.bluePrefab = DataManager.Instance.Enemies.GetEnemy(EEnemyType.Orange).prefab;
         return this.bluePrefab;
     }
 

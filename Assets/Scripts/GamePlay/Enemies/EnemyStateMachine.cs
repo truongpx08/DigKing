@@ -72,7 +72,7 @@ public class EnemyInitialState : EnemyBaseState, IEnterState
         Cell currentCell = enemy.Type switch
         {
             EEnemyType.Red => Map.Instance.GetRandomThinCellWithoutCharacter(),
-            EEnemyType.Blue => Map.Instance.GetRandomThickCellWithoutCharacter(),
+            EEnemyType.Orange => Map.Instance.GetRandomThickCellWithoutCharacter(),
             _ => null
         };
 
@@ -98,7 +98,7 @@ public class EnemyMovementState : EnemyBaseState, IEnterState
                     this.movementStrategy = gameObject.AddComponent<BorderMovement>();
                 movementStrategy.Move();
                 break;
-            case EEnemyType.Blue:
+            case EEnemyType.Orange:
                 if (!HasComponent<IMovementStrategy>())
                     this.movementStrategy = gameObject.AddComponent<PingPongMovement>();
                 movementStrategy.Move();
