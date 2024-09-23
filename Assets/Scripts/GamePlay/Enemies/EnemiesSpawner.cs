@@ -12,7 +12,7 @@ public class EnemiesSpawner : TruongSingleton<EnemiesSpawner>
 
     public void SpawnEnemies()
     {
-        int numberEnemies = 5;
+        int numberEnemies = 15;
         for (int i = 0; i < numberEnemies; i++)
         {
             SpawnOneEnemy();

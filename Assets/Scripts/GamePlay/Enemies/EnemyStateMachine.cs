@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Linq;
 using Sirenix.OdinInspector;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -27,18 +28,15 @@ public class EnemyStateMachine : TruongMonoBehaviour
         switch (nextState)
         {
             case EEnemyState.Initial:
-                if (!HasComponent<EnemyInitialState>())
-                    this.initialState = gameObject.AddComponent<EnemyInitialState>();
+                this.initialState ??= gameObject.AddComponent<EnemyInitialState>();
                 stateMachine?.ChangeState(initialState);
                 break;
             case EEnemyState.Movement:
-                if (!HasComponent<EnemyMovementState>())
-                    this.movementState = gameObject.AddComponent<EnemyMovementState>();
+                this.movementState ??= gameObject.AddComponent<EnemyMovementState>();
                 stateMachine?.ChangeState(movementState);
                 break;
             case EEnemyState.Disabled:
-                if (!HasComponent<EnemyDisabledState>())
-                    this.disabledState = gameObject.AddComponent<EnemyDisabledState>();
+                this.disabledState ??= gameObject.AddComponent<EnemyDisabledState>();
                 stateMachine?.ChangeState(disabledState);
                 break;
             default:
@@ -73,6 +71,7 @@ public class EnemyInitialState : EnemyBaseState, IEnterState
         {
             EEnemyType.Red => Map.Instance.GetRandomThinCellWithoutCharacter(),
             EEnemyType.Orange => Map.Instance.GetRandomThickCellWithoutCharacter(),
+            EEnemyType.Yellow => Map.Instance.GetRandomThickCellWithoutCharacter(),
             _ => null
         };
 
@@ -96,16 +95,20 @@ public class EnemyMovementState : EnemyBaseState, IEnterState
             case EEnemyType.Red:
                 if (!HasComponent<IMovementStrategy>())
                     this.movementStrategy = gameObject.AddComponent<BorderMovement>();
-                movementStrategy.Move();
                 break;
             case EEnemyType.Orange:
                 if (!HasComponent<IMovementStrategy>())
                     this.movementStrategy = gameObject.AddComponent<PingPongMovement>();
-                movementStrategy.Move();
+                break;
+            case EEnemyType.Yellow:
+                if (!HasComponent<IMovementStrategy>())
+                    this.movementStrategy = gameObject.AddComponent<FourDirectionMovement>();
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
+
+        movementStrategy.Move();
     }
 }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Linq;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -50,12 +51,50 @@ public class BaseMovementStrategy : TruongMonoBehaviour
         enemy.transform.position = targetPosition;
         this.enemy.DataHandler.SetCurrentCell(nextCell);
     }
+
+    protected Cell FindRandomThinCell()
+    {
+        var cells = CurrentCell.Get4AdjacentCells().ToList();
+        var thinCells = cells.FindAll(cell => cell != null && cell.StateMachine.CurrentState == ECellState.Thin);
+        return thinCells.Count == 0 ? null : thinCells[Random.Range(0, thinCells.Count)];
+    }
+
+    protected Cell FindRandomCell()
+    {
+        var cells = CurrentCell.Get4AdjacentCells().ToList();
+        return cells.Count == 0 ? null : cells[Random.Range(0, cells.Count)];
+    }
+
+    protected Cell FindRandomThinCellForNavigation()
+    {
+        var cells = CurrentCell.Get4AdjacentCells().ToList();
+        var thinCells = cells.FindAll(cell => cell != null && cell.StateMachine.CurrentState == ECellState.Thin);
+        var oppositeDirection = DirectionUtils.GetOppositeDirection(direction);
+        var oppositeCell = CurrentCell.GetCellWithDirection(oppositeDirection);
+
+        if (oppositeCell != null) thinCells.Remove(oppositeCell);
+        return thinCells.Count == 0 ? null : thinCells[Random.Range(0, thinCells.Count)];
+    }
+
+    [Button]
+    protected Cell FindRandomCellForNavigation()
+    {
+        var cells = CurrentCell.Get4AdjacentCells().ToList();
+
+        var oppositeDirection = DirectionUtils.GetOppositeDirection(direction);
+        var oppositeCell = CurrentCell.GetCellWithDirection(oppositeDirection);
+        if (oppositeCell != null) cells.Remove(oppositeCell);
+
+        var sameDirectionCell = CurrentCell.GetCellWithDirection(direction);
+        cells.Remove(sameDirectionCell);
+
+        return cells.Count == 0 ? null : cells[Random.Range(0, cells.Count)];
+    }
 }
 
 // Chiến lược di chuyển quanh các biên  
 public class BorderMovement : BaseMovementStrategy, IMovementStrategy
 {
-    [SerializeField] private bool canMove;
     private Cell nextCellToMove;
 
     public void Move()
@@ -64,17 +103,10 @@ public class BorderMovement : BaseMovementStrategy, IMovementStrategy
         nextCellToMove = FindRandomThinCell();
         direction = CurrentCell.GetDirection(nextCellToMove);
 
-        canMove = nextCellToMove != null;
-        if (canMove)
+        if (nextCellToMove != null)
             StartCoroutine(MoveCoroutine());
     }
 
-    private Cell FindRandomThinCell()
-    {
-        var cells = CurrentCell.Get4AdjacentCells().ToList();
-        var thinCells = cells.FindAll(cell => cell != null && cell.StateMachine.CurrentState == ECellState.Thin);
-        return thinCells.Count == 0 ? null : thinCells[Random.Range(0, thinCells.Count)];
-    }
 
     private IEnumerator MoveCoroutine()
     {
@@ -97,16 +129,6 @@ public class BorderMovement : BaseMovementStrategy, IMovementStrategy
         LoopMovement();
     }
 
-    private Cell FindRandomThinCellForNavigation()
-    {
-        var cells = CurrentCell.Get4AdjacentCells().ToList();
-        var thinCells = cells.FindAll(cell => cell != null && cell.StateMachine.CurrentState == ECellState.Thin);
-        var oppositeDirection = DirectionUtils.GetOppositeDirection(direction);
-        var oppositeCell = CurrentCell.GetCellWithDirection(oppositeDirection);
-
-        if (oppositeCell != null) thinCells.Remove(oppositeCell);
-        return thinCells.Count == 0 ? null : thinCells[Random.Range(0, thinCells.Count)];
-    }
 
     private void LoopMovement()
     {
@@ -143,6 +165,51 @@ public class PingPongMovement : BaseMovementStrategy, IMovementStrategy
         }
 
         yield return MoveToCell(nextCell, 0.2f);
+        LoopMovement();
+    }
+
+    private void LoopMovement()
+    {
+        StopAllCoroutines();
+        StartCoroutine(MoveCoroutine()); // Continue moving to the next cell  
+    }
+}
+
+public class FourDirectionMovement : BaseMovementStrategy, IMovementStrategy
+{
+    private Cell nextCellToMove;
+    private int moveCount;
+
+    public void Move()
+    {
+        LoadEnemyReference();
+        this.nextCellToMove = FindRandomCell();
+        direction = CurrentCell.GetDirection(nextCellToMove);
+
+        if (nextCellToMove != null)
+            StartCoroutine(MoveCoroutine());
+    }
+
+    private IEnumerator MoveCoroutine()
+    {
+        this.moveCount++;
+        if (IsCellDisabled(CurrentCell))
+        {
+            enemy.StateMachine.ChangeState(EEnemyState.Disabled);
+            yield break;
+        }
+
+        Cell nextCell = CharacterUtils.GetNextCellToMove(CurrentCellData, direction);
+        if (nextCell == null || nextCell.StateMachine.CurrentState is ECellState.Disabled || this.moveCount == 4)
+        {
+            nextCellToMove = FindRandomCellForNavigation();
+            direction = CurrentCell.GetDirection(nextCellToMove);
+            LoopMovement();
+            this.moveCount = 0;
+            yield break;
+        }
+
+        yield return MoveToCell(nextCell, 0.15f);
         LoopMovement();
     }
 
