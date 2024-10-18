@@ -88,7 +88,10 @@ public class BaseMovementStrategy : TruongMonoBehaviour
         var sameDirectionCell = CurrentCell.GetCellWithDirection(direction);
         cells.Remove(sameDirectionCell);
 
-        return cells.Count == 0 ? null : cells[Random.Range(0, cells.Count)];
+        if (cells.Contains(null)) cells.Remove(null);
+        if (cells.Contains(null)) cells.Remove(null);
+        var result = cells.Count == 0 ? null : cells[Random.Range(0, cells.Count)];
+        return result;
     }
 }
 
@@ -200,7 +203,7 @@ public class FourDirectionMovement : BaseMovementStrategy, IMovementStrategy
         }
 
         Cell nextCell = CharacterUtils.GetNextCellToMove(CurrentCellData, direction);
-        if (nextCell == null || nextCell.StateMachine.CurrentState is ECellState.Disabled || this.moveCount == 4)
+        if (nextCell == null || nextCell.StateMachine.CurrentState is ECellState.Disabled || this.moveCount == 8)
         {
             nextCellToMove = FindRandomCellForNavigation();
             direction = CurrentCell.GetDirection(nextCellToMove);

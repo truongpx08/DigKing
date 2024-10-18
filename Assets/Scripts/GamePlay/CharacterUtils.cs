@@ -16,6 +16,4 @@ public class CharacterUtils
             _ => throw new ArgumentOutOfRangeException(nameof(moveType), moveType, null)
         };
     }
-
-    
 }
