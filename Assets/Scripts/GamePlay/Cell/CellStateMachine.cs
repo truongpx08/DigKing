@@ -109,22 +109,22 @@ public class CellInitialState : CellBaseState, IEnterState
         this.MapGenerator.CellList.ForEach(cellItem =>
         {
             if (cellItem.IsThisCell(this.DataRef.x, this.DataRef.y + 1))
-                this.DataRef.upCell = cellItem;
+                this.DataRef.cellPosition2 = cellItem;
             if (cellItem.IsThisCell(this.DataRef.x, this.DataRef.y - 1))
-                this.DataRef.downCell = cellItem;
+                this.DataRef.cellPosition8 = cellItem;
             if (cellItem.IsThisCell(this.DataRef.x - 1, this.DataRef.y))
-                this.DataRef.leftCell = cellItem;
+                this.DataRef.cellPosition4 = cellItem;
             if (cellItem.IsThisCell(this.DataRef.x + 1, this.DataRef.y))
-                this.DataRef.rightCell = cellItem;
+                this.DataRef.cellPosition6 = cellItem;
 
             if (cellItem.IsThisCell(this.DataRef.x - 1, this.DataRef.y + 1))
-                this.DataRef.upLeftCell = cellItem;
+                this.DataRef.cellPosition1 = cellItem;
             if (cellItem.IsThisCell(this.DataRef.x + 1, this.DataRef.y + 1))
-                this.DataRef.upRightCell = cellItem;
+                this.DataRef.cellPosition3 = cellItem;
             if (cellItem.IsThisCell(this.DataRef.x - 1, this.DataRef.y - 1))
-                this.DataRef.downLeftCell = cellItem;
+                this.DataRef.cellPosition5 = cellItem;
             if (cellItem.IsThisCell(this.DataRef.x + 1, this.DataRef.y - 1))
-                this.DataRef.downRightCell = cellItem;
+                this.DataRef.cellPosition7 = cellItem;
         });
     }
 }

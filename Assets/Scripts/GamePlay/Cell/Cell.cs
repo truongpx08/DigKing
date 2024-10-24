@@ -39,10 +39,10 @@ public class Cell : TruongMonoBehaviour
         // Define an array of neighboring cells  
         Cell[] neighbors =
         {
-            this.dataHandler.Data.upCell,
-            this.dataHandler.Data.downCell,
-            this.dataHandler.Data.leftCell,
-            this.dataHandler.Data.rightCell
+            this.dataHandler.Data.cellPosition2,
+            this.dataHandler.Data.cellPosition8,
+            this.dataHandler.Data.cellPosition4,
+            this.dataHandler.Data.cellPosition6
         };
 
         foreach (var cell in neighbors)
@@ -55,40 +55,6 @@ public class Cell : TruongMonoBehaviour
 
         Debug.Log($"No unprocessed thick cell found for x:{this.dataHandler.Data.x} y:{this.dataHandler.Data.y}.");
         return null; // Return null if no unprocessed thick cell is found  
-    }
-
-    public Cell[] Get4AdjacentCells()
-    {
-        // Define an array of neighboring cells  
-        Cell[] neighbors =
-        {
-            this.dataHandler.Data.upCell,
-            this.dataHandler.Data.downCell,
-            this.dataHandler.Data.leftCell,
-            this.dataHandler.Data.rightCell
-        };
-
-        return neighbors; // Return null if no unprocessed thick cell is found  
-    }
-
-    public Cell[] Get8AdjacentCells()
-    {
-        // Khai báo mảng cho các ô lân cận  
-        var neighbors = new Cell[8];
-
-        // Lấy 4 ô lân cận  
-        var _4Neighbors = Get4AdjacentCells();
-
-        // Điền các ô chéo vào mảng neighbors  
-        neighbors[0] = this.dataHandler.Data.upLeftCell;
-        neighbors[1] = this.dataHandler.Data.upRightCell;
-        neighbors[2] = this.dataHandler.Data.downLeftCell;
-        neighbors[3] = this.dataHandler.Data.downRightCell;
-
-        // Điền các ô lân cận còn lại vào mảng neighbors  
-        Array.Copy(_4Neighbors, 0, neighbors, 4, 4);
-
-        return neighbors; // Trả về mảng ô lân cận  
     }
 
     private bool IsUnprocessedThickCell(Cell cell)
@@ -106,7 +72,7 @@ public class Cell : TruongMonoBehaviour
     [Button]
     public bool IsBreakableBorder()
     {
-        var cells = Get8AdjacentCells();
+        var cells = this.dataHandler.Data.Get8AdjacentCells();
         return cells.All(c => c == null || c.stateMachine.CurrentState != ECellState.Thick);
     }
 
@@ -118,10 +84,10 @@ public class Cell : TruongMonoBehaviour
     public EDirectionType GetDirection(Cell adjacentCell)
     {
         var data = this.dataHandler.Data;
-        if (data.upCell == adjacentCell) return EDirectionType.Up;
-        if (data.downCell == adjacentCell) return EDirectionType.Down;
-        if (data.leftCell == adjacentCell) return EDirectionType.Left;
-        if (data.rightCell == adjacentCell) return EDirectionType.Right;
+        if (data.cellPosition2 == adjacentCell) return EDirectionType.Up;
+        if (data.cellPosition8 == adjacentCell) return EDirectionType.Down;
+        if (data.cellPosition4 == adjacentCell) return EDirectionType.Left;
+        if (data.cellPosition6 == adjacentCell) return EDirectionType.Right;
         return EDirectionType.Down;
     }
 
@@ -130,10 +96,10 @@ public class Cell : TruongMonoBehaviour
         var data = this.dataHandler.Data;
         return oppositeDirection switch
         {
-            EDirectionType.Up => data.upCell,
-            EDirectionType.Down => data.downCell,
-            EDirectionType.Left => data.leftCell,
-            EDirectionType.Right => data.rightCell,
+            EDirectionType.Up => data.cellPosition2,
+            EDirectionType.Down => data.cellPosition8,
+            EDirectionType.Left => data.cellPosition4,
+            EDirectionType.Right => data.cellPosition6,
             _ => throw new ArgumentOutOfRangeException(nameof(oppositeDirection), oppositeDirection, null)
         };
     }

@@ -9,10 +9,10 @@ public class CharacterUtils
     {
         return moveType switch
         {
-            EDirectionType.Up => currentCell.upCell,
-            EDirectionType.Down => currentCell.downCell,
-            EDirectionType.Left => currentCell.leftCell,
-            EDirectionType.Right => currentCell.rightCell,
+            EDirectionType.Up => currentCell.cellPosition2,
+            EDirectionType.Down => currentCell.cellPosition8,
+            EDirectionType.Left => currentCell.cellPosition4,
+            EDirectionType.Right => currentCell.cellPosition6,
             _ => throw new ArgumentOutOfRangeException(nameof(moveType), moveType, null)
         };
     }

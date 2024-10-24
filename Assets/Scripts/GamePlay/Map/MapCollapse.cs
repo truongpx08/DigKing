@@ -225,10 +225,10 @@ public class MapCollapse : TruongMonoBehaviour
         {
             if (cell != null)
             {
-                AddCellToSet(cell.DataHandler.Data.upCell);
-                AddCellToSet(cell.DataHandler.Data.downCell);
-                AddCellToSet(cell.DataHandler.Data.leftCell);
-                AddCellToSet(cell.DataHandler.Data.rightCell);
+                AddCellToSet(cell.DataHandler.Data.cellPosition2);
+                AddCellToSet(cell.DataHandler.Data.cellPosition8);
+                AddCellToSet(cell.DataHandler.Data.cellPosition4);
+                AddCellToSet(cell.DataHandler.Data.cellPosition6);
             }
         }
 

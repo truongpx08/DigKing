@@ -54,20 +54,20 @@ public class BaseMovementStrategy : TruongMonoBehaviour
 
     protected Cell FindRandomThinCell()
     {
-        var cells = CurrentCell.Get4AdjacentCells().ToList();
+        var cells = CurrentCell.DataHandler.Data.GetAdjacentCellsWithPosition2468().ToList();
         var thinCells = cells.FindAll(cell => cell != null && cell.StateMachine.CurrentState == ECellState.Thin);
         return thinCells.Count == 0 ? null : thinCells[Random.Range(0, thinCells.Count)];
     }
 
     protected Cell FindRandomCell()
     {
-        var cells = CurrentCell.Get4AdjacentCells().ToList();
+        var cells = CurrentCell.DataHandler.Data.GetAdjacentCellsWithPosition2468().ToList();
         return cells.Count == 0 ? null : cells[Random.Range(0, cells.Count)];
     }
 
     protected Cell FindRandomThinCellForNavigation()
     {
-        var cells = CurrentCell.Get4AdjacentCells().ToList();
+        var cells = CurrentCell.DataHandler.Data.GetAdjacentCellsWithPosition2468().ToList();
         var thinCells = cells.FindAll(cell => cell != null && cell.StateMachine.CurrentState == ECellState.Thin);
         var oppositeDirection = DirectionUtils.GetOppositeDirection(direction);
         var oppositeCell = CurrentCell.GetCellWithDirection(oppositeDirection);
@@ -79,7 +79,7 @@ public class BaseMovementStrategy : TruongMonoBehaviour
     [Button]
     protected Cell FindRandomCellForNavigation()
     {
-        var cells = CurrentCell.Get4AdjacentCells().ToList();
+        var cells = CurrentCell.DataHandler.Data.GetAdjacentCellsWithPosition2468().ToList();
 
         var oppositeDirection = DirectionUtils.GetOppositeDirection(direction);
         var oppositeCell = CurrentCell.GetCellWithDirection(oppositeDirection);
