@@ -50,23 +50,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4347494295732298110, guid: 64ef09e74d22aeb4db3ff86aaf7caf39, type: 3}
       propertyPath: m_Color.b
-      value: 0.5803922
-      objectReference: {fileID: 0}
-    - target: {fileID: 4347494295732298110, guid: 64ef09e74d22aeb4db3ff86aaf7caf39, type: 3}
-      propertyPath: m_Color.g
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4347494295732298110, guid: 64ef09e74d22aeb4db3ff86aaf7caf39, type: 3}
+      propertyPath: m_Color.g
+      value: 0.9725491
+      objectReference: {fileID: 0}
+    - target: {fileID: 4347494295732298110, guid: 64ef09e74d22aeb4db3ff86aaf7caf39, type: 3}
       propertyPath: m_Color.r
-      value: 0.24313727
+      value: 0.9686275
       objectReference: {fileID: 0}
     - target: {fileID: 6102050436814983141, guid: 64ef09e74d22aeb4db3ff86aaf7caf39, type: 3}
       propertyPath: type
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6789792673942397187, guid: 64ef09e74d22aeb4db3ff86aaf7caf39, type: 3}
       propertyPath: m_Name
-      value: Indigo
+      value: Yellow
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

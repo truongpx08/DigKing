@@ -9,11 +9,13 @@ public class EnemiesFactory : MonoBehaviour
     [SerializeField] private Transform container;
     [SerializeField] private Enemy redPrefab;
     [SerializeField] private Enemy orangePrefab;
+    [SerializeField] private Enemy indigoPrefab;
     [SerializeField] private Enemy yellowPrefab;
 
     public Enemy CreateEnemy(EEnemyType type)
     {
-        return Instantiate(GetPrefab(type), this.container);
+        var pre = GetPrefab(type);
+        return Instantiate(pre, this.container);
     }
 
     private Enemy GetPrefab(EEnemyType type)
@@ -28,10 +30,14 @@ public class EnemiesFactory : MonoBehaviour
                 if (this.orangePrefab == null)
                     this.orangePrefab = DataManager.Instance.Enemies.GetEnemy(EEnemyType.Orange).prefab;
                 return this.orangePrefab;
-            case EEnemyType.Indigo:
+            case EEnemyType.Yellow:
                 if (this.yellowPrefab == null)
-                    this.yellowPrefab = DataManager.Instance.Enemies.GetEnemy(EEnemyType.Indigo).prefab;
+                    this.yellowPrefab = DataManager.Instance.Enemies.GetEnemy(EEnemyType.Yellow).prefab;
                 return this.yellowPrefab;
+            case EEnemyType.Indigo:
+                if (this.indigoPrefab == null)
+                    this.indigoPrefab = DataManager.Instance.Enemies.GetEnemy(EEnemyType.Indigo).prefab;
+                return this.indigoPrefab;
             default:
                 throw new ArgumentOutOfRangeException(nameof(type), type, null);
         }

@@ -6,7 +6,7 @@ public enum EEnemyType
 {
     Red,
     Orange,
-    // Yellow,
+    Yellow,
     // Green,
     // Blue,
     Indigo,

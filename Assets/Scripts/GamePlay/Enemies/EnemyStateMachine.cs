@@ -100,6 +100,10 @@ public class EnemyMovementState : EnemyBaseState, IEnterState
                 if (!HasComponent<IMovementStrategy>())
                     this.movementStrategy = gameObject.AddComponent<PingPongMovement>();
                 break;
+            case EEnemyType.Yellow:
+                if (!HasComponent<IMovementStrategy>())
+                    this.movementStrategy = gameObject.AddComponent<FourDirectionMovement>();
+                break;
             case EEnemyType.Indigo:
                 if (!HasComponent<IMovementStrategy>())
                     this.movementStrategy = gameObject.AddComponent<FourDirectionMovement>();
