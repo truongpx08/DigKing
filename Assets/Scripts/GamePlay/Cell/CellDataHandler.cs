@@ -14,8 +14,8 @@ public class CellData
     public Cell cellPosition6;
     public Cell cellPosition1;
     public Cell cellPosition3;
-    public Cell cellPosition5;
     public Cell cellPosition7;
+    public Cell cellPosition9;
 
     public Cell[] GetAdjacentCellsWithPosition2468()
     {
@@ -42,8 +42,8 @@ public class CellData
         // Điền các ô chéo vào mảng neighbors  
         neighbors[0] = cellPosition1;
         neighbors[1] = cellPosition3;
-        neighbors[2] = cellPosition5;
-        neighbors[3] = cellPosition7;
+        neighbors[2] = cellPosition7;
+        neighbors[3] = cellPosition9;
 
         // Điền các ô lân cận còn lại vào mảng neighbors  
         Array.Copy(_4Neighbors, 0, neighbors, 4, 4);

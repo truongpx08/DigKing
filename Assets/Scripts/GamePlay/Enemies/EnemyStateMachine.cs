@@ -71,6 +71,7 @@ public class EnemyInitialState : EnemyBaseState, IEnterState
         {
             EEnemyType.Red => Map.Instance.GetRandomThinCellWithoutCharacter(),
             EEnemyType.Orange => Map.Instance.GetRandomThickCellWithoutCharacter(),
+            EEnemyType.Yellow => Map.Instance.GetRandomThickCellWithoutCharacter(),
             EEnemyType.Indigo => Map.Instance.GetRandomThickCellWithoutCharacter(),
             _ => null
         };
@@ -102,11 +103,11 @@ public class EnemyMovementState : EnemyBaseState, IEnterState
                 break;
             case EEnemyType.Yellow:
                 if (!HasComponent<IMovementStrategy>())
-                    this.movementStrategy = gameObject.AddComponent<FourDirectionMovement>();
+                    this.movementStrategy = gameObject.AddComponent<PopOut1357Movement>();
                 break;
             case EEnemyType.Indigo:
                 if (!HasComponent<IMovementStrategy>())
-                    this.movementStrategy = gameObject.AddComponent<FourDirectionMovement>();
+                    this.movementStrategy = gameObject.AddComponent<FourDirectionMovement2468>();
                 break;
             default:
                 throw new ArgumentOutOfRangeException();

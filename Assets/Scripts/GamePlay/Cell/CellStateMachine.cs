@@ -122,9 +122,9 @@ public class CellInitialState : CellBaseState, IEnterState
             if (cellItem.IsThisCell(this.DataRef.x + 1, this.DataRef.y + 1))
                 this.DataRef.cellPosition3 = cellItem;
             if (cellItem.IsThisCell(this.DataRef.x - 1, this.DataRef.y - 1))
-                this.DataRef.cellPosition5 = cellItem;
-            if (cellItem.IsThisCell(this.DataRef.x + 1, this.DataRef.y - 1))
                 this.DataRef.cellPosition7 = cellItem;
+            if (cellItem.IsThisCell(this.DataRef.x + 1, this.DataRef.y - 1))
+                this.DataRef.cellPosition9 = cellItem;
         });
     }
 }

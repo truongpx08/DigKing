@@ -147,7 +147,7 @@ public class PingPongMovement : BaseMovementStrategy, IMovementStrategy
     {
         LoadEnemyReference();
 
-        direction = CurrentCell.GetRandomDirection();
+        direction = CurrentCell.GetRandom2468Direction();
         StartCoroutine(MoveCoroutine());
     }
 
@@ -178,7 +178,7 @@ public class PingPongMovement : BaseMovementStrategy, IMovementStrategy
     }
 }
 
-public class FourDirectionMovement : BaseMovementStrategy, IMovementStrategy
+public class FourDirectionMovement2468 : BaseMovementStrategy, IMovementStrategy
 {
     private Cell nextCellToMove;
     private int moveCount;
@@ -213,6 +213,44 @@ public class FourDirectionMovement : BaseMovementStrategy, IMovementStrategy
         }
 
         yield return MoveToCell(nextCell, 0.15f);
+        LoopMovement();
+    }
+
+    private void LoopMovement()
+    {
+        StopAllCoroutines();
+        StartCoroutine(MoveCoroutine()); // Continue moving to the next cell  
+    }
+}
+
+// move along the 1357 cells. when touching the border will pop out
+public class PopOut1357Movement : BaseMovementStrategy, IMovementStrategy
+{
+    public void Move()
+    {
+        LoadEnemyReference();
+
+        direction = CurrentCell.GetRandom1357Direction();
+        StartCoroutine(MoveCoroutine());
+    }
+
+    private IEnumerator MoveCoroutine()
+    {
+        if (IsCellDisabled(CurrentCell))
+        {
+            enemy.StateMachine.ChangeState(EEnemyState.Disabled);
+            yield break;
+        }
+
+        Cell nextCell = CharacterUtils.GetNextCellToMove(CurrentCellData, direction);
+        if (nextCell == null || nextCell.StateMachine.CurrentState is ECellState.Disabled)
+        {
+            direction = DirectionUtils.GetOppositeDirection(direction);
+            LoopMovement();
+            yield break;
+        }
+
+        yield return MoveToCell(nextCell, 0.2f);
         LoopMovement();
     }
 

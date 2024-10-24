@@ -5,17 +5,21 @@ using UnityEngine;
 
 public enum EDirectionType
 {
-    Up,
-    Down,
-    Left,
-    Right,
+    Position2,
+    Position8,
+    Position4,
+    Position6,
+    Position1,
+    Position3,
+    Position7,
+    Position9,
 }
 
 public class PlayerInput : TruongSingleton<PlayerInput>
 {
     private Vector2 mouseStartPosition;
     private Vector2 mouseEndPosition;
-    private bool isDragging = false;
+    private bool isDragging;
     private const float DragThreshold = 50f; // Threshold to determine a drag  
 
     [SerializeField] private EDirectionType direction;
@@ -78,28 +82,28 @@ public class PlayerInput : TruongSingleton<PlayerInput>
     private void OnDragUp()
     {
         Debug.Log("Dragged up");
-        SetDirection(EDirectionType.Up);
+        SetDirection(EDirectionType.Position2);
         Player.Instance.StateMachine.ChangeState(EPlayerState.Movement);
     }
 
     private void OnDragDown()
     {
         Debug.Log("Dragged down");
-        SetDirection(EDirectionType.Down);
+        SetDirection(EDirectionType.Position8);
         Player.Instance.StateMachine.ChangeState(EPlayerState.Movement);
     }
 
     private void OnDragLeft()
     {
         Debug.Log("Dragged left");
-        SetDirection(EDirectionType.Left);
+        SetDirection(EDirectionType.Position4);
         Player.Instance.StateMachine.ChangeState(EPlayerState.Movement);
     }
 
     private void OnDragRight()
     {
         Debug.Log("Dragged right");
-        SetDirection(EDirectionType.Right);
+        SetDirection(EDirectionType.Position6);
         Player.Instance.StateMachine.ChangeState(EPlayerState.Movement);
     }
 

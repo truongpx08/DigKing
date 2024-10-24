@@ -84,11 +84,11 @@ public class Cell : TruongMonoBehaviour
     public EDirectionType GetDirection(Cell adjacentCell)
     {
         var data = this.dataHandler.Data;
-        if (data.cellPosition2 == adjacentCell) return EDirectionType.Up;
-        if (data.cellPosition8 == adjacentCell) return EDirectionType.Down;
-        if (data.cellPosition4 == adjacentCell) return EDirectionType.Left;
-        if (data.cellPosition6 == adjacentCell) return EDirectionType.Right;
-        return EDirectionType.Down;
+        if (data.cellPosition2 == adjacentCell) return EDirectionType.Position2;
+        if (data.cellPosition8 == adjacentCell) return EDirectionType.Position8;
+        if (data.cellPosition4 == adjacentCell) return EDirectionType.Position4;
+        if (data.cellPosition6 == adjacentCell) return EDirectionType.Position6;
+        return EDirectionType.Position8;
     }
 
     public Cell GetCellWithDirection(EDirectionType oppositeDirection)
@@ -96,17 +96,35 @@ public class Cell : TruongMonoBehaviour
         var data = this.dataHandler.Data;
         return oppositeDirection switch
         {
-            EDirectionType.Up => data.cellPosition2,
-            EDirectionType.Down => data.cellPosition8,
-            EDirectionType.Left => data.cellPosition4,
-            EDirectionType.Right => data.cellPosition6,
+            EDirectionType.Position2 => data.cellPosition2,
+            EDirectionType.Position8 => data.cellPosition8,
+            EDirectionType.Position4 => data.cellPosition4,
+            EDirectionType.Position6 => data.cellPosition6,
             _ => throw new ArgumentOutOfRangeException(nameof(oppositeDirection), oppositeDirection, null)
         };
     }
 
-    public EDirectionType GetRandomDirection()
+    public EDirectionType GetRandom2468Direction()
     {
-        var list = Enum.GetNames(typeof(EDirectionType));
-        return Enum.Parse<EDirectionType>(list[Random.Range(0, list.Length)]);
+        EDirectionType[] list =
+        {
+            EDirectionType.Position2,
+            EDirectionType.Position8,
+            EDirectionType.Position4,
+            EDirectionType.Position6,
+        };
+        return list[Random.Range(0, list.Length)];
+    }
+
+    public EDirectionType GetRandom1357Direction()
+    {
+        EDirectionType[] list =
+        {
+            EDirectionType.Position1,
+            EDirectionType.Position3,
+            EDirectionType.Position7,
+            EDirectionType.Position9,
+        };
+        return list[Random.Range(0, list.Length)];
     }
 }

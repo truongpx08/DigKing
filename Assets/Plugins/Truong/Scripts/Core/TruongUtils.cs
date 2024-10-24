@@ -19,7 +19,6 @@ public class TruongUtils : MonoBehaviour
         return GetComponent<T>() != null;
     }
 
-
     protected T GetComponentInChildrenWithName<T>(string goName)
     {
         return GetComponentInChildrenWithName(goName).GetComponent<T>();
