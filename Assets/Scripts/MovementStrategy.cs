@@ -160,9 +160,12 @@ public class PingPongMovement : BaseMovementStrategy, IMovementStrategy
         }
 
         Cell nextCell = CharacterUtils.GetNextCellToMove(CurrentCellData, direction);
-        if (nextCell == null || nextCell.StateMachine.CurrentState is ECellState.Disabled)
+        if (!nextCell || nextCell.StateMachine.CurrentState is ECellState.Disabled)
         {
             direction = DirectionUtils.GetOppositeDirection(direction);
+            nextCell = CharacterUtils.GetNextCellToMove(CurrentCellData, direction);
+            if (!nextCell || nextCell.StateMachine.CurrentState is ECellState.Disabled)
+                yield break;
             LoopMovement();
             yield break;
         }
@@ -224,7 +227,7 @@ public class FourDirectionMovement2468 : BaseMovementStrategy, IMovementStrategy
 }
 
 // move along the 1357 cells. when touching the border will pop out
-public class PopOut1357Movement : BaseMovementStrategy, IMovementStrategy
+public class PopOutMovement1379 : BaseMovementStrategy, IMovementStrategy
 {
     public void Move()
     {
@@ -243,10 +246,20 @@ public class PopOut1357Movement : BaseMovementStrategy, IMovementStrategy
         }
 
         Cell nextCell = CharacterUtils.GetNextCellToMove(CurrentCellData, direction);
-        if (nextCell == null || nextCell.StateMachine.CurrentState is ECellState.Disabled)
+        if (!nextCell || nextCell.StateMachine.CurrentState is ECellState.Disabled)
         {
-            direction = DirectionUtils.GetOppositeDirection(direction);
-            LoopMovement();
+            var directions = DirectionUtils.GetPopOutDirection(direction);
+
+            direction = EDirectionType.None;
+            foreach (var item in directions)
+            {
+                if (nextCell && nextCell.StateMachine.CurrentState != ECellState.Disabled) continue;
+                direction = DirectionUtils.GetOppositeDirection(item);
+                nextCell = CharacterUtils.GetNextCellToMove(CurrentCellData, direction);
+            }
+
+            if (nextCell && nextCell.StateMachine.CurrentState != ECellState.Disabled)
+                LoopMovement();
             yield break;
         }
 

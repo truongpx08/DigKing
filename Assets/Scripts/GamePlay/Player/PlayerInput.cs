@@ -5,6 +5,7 @@ using UnityEngine;
 
 public enum EDirectionType
 {
+    None,
     Position2,
     Position8,
     Position4,

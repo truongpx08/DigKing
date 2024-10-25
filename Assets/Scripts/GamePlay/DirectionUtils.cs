@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 public class DirectionUtils
 {
@@ -37,7 +38,36 @@ public class DirectionUtils
             EDirectionType.Position3 => EDirectionType.Position7,
             EDirectionType.Position7 => EDirectionType.Position3,
             EDirectionType.Position9 => EDirectionType.Position1,
+            EDirectionType.None => EDirectionType.None,
             _ => throw new ArgumentOutOfRangeException()
         };
+    }
+
+    public static List<EDirectionType> GetPopOutDirection(EDirectionType directionType)
+    {
+        List<EDirectionType> directions = new List<EDirectionType>();
+        switch (directionType)
+        {
+            case EDirectionType.Position1:
+                directions.AddRange(new[]
+                    { EDirectionType.Position3, EDirectionType.Position7, EDirectionType.Position9 });
+                break;
+            case EDirectionType.Position3:
+                directions.AddRange(new[]
+                    { EDirectionType.Position1, EDirectionType.Position9, EDirectionType.Position7 });
+                break;
+            case EDirectionType.Position7:
+                directions.AddRange(new[]
+                    { EDirectionType.Position1, EDirectionType.Position9, EDirectionType.Position3 });
+                break;
+            case EDirectionType.Position9:
+                directions.AddRange(new[]
+                    { EDirectionType.Position7, EDirectionType.Position3, EDirectionType.Position1 });
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+
+        return directions;
     }
 }

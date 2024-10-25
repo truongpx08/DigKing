@@ -103,7 +103,7 @@ public class EnemyMovementState : EnemyBaseState, IEnterState
                 break;
             case EEnemyType.Yellow:
                 if (!HasComponent<IMovementStrategy>())
-                    this.movementStrategy = gameObject.AddComponent<PopOut1357Movement>();
+                    this.movementStrategy = gameObject.AddComponent<PopOutMovement1379>();
                 break;
             case EEnemyType.Indigo:
                 if (!HasComponent<IMovementStrategy>())
