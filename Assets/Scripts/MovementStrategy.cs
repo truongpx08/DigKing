@@ -330,3 +330,60 @@ public class FourDirectionMovement1379 : BaseMovementStrategy, IMovementStrategy
         StartCoroutine(MoveCoroutine()); // Continue moving to the next cell  
     }
 }
+
+public class Combine2468And1379Movement : BaseMovementStrategy, IMovementStrategy
+{
+    private Cell nextCellToMove;
+    private int moveCount;
+    private bool isMoveAs2468;
+
+    public void Move()
+    {
+        LoadEnemyReference();
+        this.nextCellToMove = CurrentCell.DataHandler.Data.FindRandomCellFrom2468();
+        this.isMoveAs2468 = true;
+        direction = CurrentCell.GetDirection(nextCellToMove);
+
+        if (nextCellToMove != null)
+            StartCoroutine(MoveCoroutine());
+    }
+
+    private IEnumerator MoveCoroutine()
+    {
+        this.moveCount++;
+        if (IsCellDisabled(CurrentCell))
+        {
+            enemy.StateMachine.ChangeState(EEnemyState.Disabled);
+            yield break;
+        }
+
+        Cell nextCell = CharacterUtils.GetNextCellToMove(CurrentCellData, direction);
+        if (nextCell == null || nextCell.StateMachine.CurrentState is ECellState.Disabled || this.moveCount == 8)
+        {
+            if (!this.isMoveAs2468)
+            {
+                nextCellToMove = FindRandom2468CellForNavigation();
+                this.isMoveAs2468 = true;
+            }
+            else
+            {
+                nextCellToMove = FindRandom1379CellForNavigation();
+                this.isMoveAs2468 = false;
+            }
+
+            direction = CurrentCell.GetDirection(nextCellToMove);
+            LoopMovement();
+            this.moveCount = 0;
+            yield break;
+        }
+
+        yield return MoveToCell(nextCell, 0.15f);
+        LoopMovement();
+    }
+
+    private void LoopMovement()
+    {
+        StopAllCoroutines();
+        StartCoroutine(MoveCoroutine()); // Continue moving to the next cell  
+    }
+}

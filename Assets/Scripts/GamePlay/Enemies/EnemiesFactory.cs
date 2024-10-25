@@ -12,6 +12,7 @@ public class EnemiesFactory : MonoBehaviour
     private Enemy indigoPrefab;
     private Enemy yellowPrefab;
     private Enemy bluePrefab;
+    private Enemy violetPrefab;
 
     public Enemy CreateEnemy(EEnemyType type)
     {
@@ -42,6 +43,9 @@ public class EnemiesFactory : MonoBehaviour
                 if (this.indigoPrefab == null)
                     this.indigoPrefab = DataManager.Instance.Enemies.GetEnemy(EEnemyType.Indigo).prefab;
                 return this.indigoPrefab;
+            case EEnemyType.Violet:
+                this.violetPrefab ??= DataManager.Instance.Enemies.GetEnemy(EEnemyType.Violet).prefab;
+                return this.violetPrefab;
             default:
                 throw new ArgumentOutOfRangeException(nameof(type), type, null);
         }
