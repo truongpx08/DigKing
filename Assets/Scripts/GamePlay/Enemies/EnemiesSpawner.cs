@@ -23,7 +23,7 @@ public class EnemiesSpawner : TruongSingleton<EnemiesSpawner>
     {
         // var enemyTypeList = Enum.GetNames(typeof(EEnemyType));
         // var enemyType = enemyTypeList[Random.Range(0, enemyTypeList.Length)];
-        var enemyType = EEnemyType.Yellow.ToString();
+        var enemyType = EEnemyType.Blue.ToString();
         var enemy = this.factory.CreateEnemy(Enum.Parse<EEnemyType>(enemyType));
         enemy.StateMachine.ChangeState(EEnemyState.Initial);
         this.enemyList.Add(enemy);

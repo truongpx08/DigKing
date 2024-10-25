@@ -88,7 +88,12 @@ public class Cell : TruongMonoBehaviour
         if (data.cellPosition8 == adjacentCell) return EDirectionType.Position8;
         if (data.cellPosition4 == adjacentCell) return EDirectionType.Position4;
         if (data.cellPosition6 == adjacentCell) return EDirectionType.Position6;
-        return EDirectionType.Position8;
+
+        if (data.cellPosition1 == adjacentCell) return EDirectionType.Position1;
+        if (data.cellPosition3 == adjacentCell) return EDirectionType.Position3;
+        if (data.cellPosition7 == adjacentCell) return EDirectionType.Position7;
+        if (data.cellPosition9 == adjacentCell) return EDirectionType.Position9;
+        return EDirectionType.None;
     }
 
     public Cell GetCellWithDirection(EDirectionType oppositeDirection)
@@ -100,6 +105,11 @@ public class Cell : TruongMonoBehaviour
             EDirectionType.Position8 => data.cellPosition8,
             EDirectionType.Position4 => data.cellPosition4,
             EDirectionType.Position6 => data.cellPosition6,
+
+            EDirectionType.Position1 => data.cellPosition1,
+            EDirectionType.Position3 => data.cellPosition3,
+            EDirectionType.Position7 => data.cellPosition7,
+            EDirectionType.Position9 => data.cellPosition9,
             _ => throw new ArgumentOutOfRangeException(nameof(oppositeDirection), oppositeDirection, null)
         };
     }

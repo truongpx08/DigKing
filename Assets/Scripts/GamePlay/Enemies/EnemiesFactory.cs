@@ -7,10 +7,11 @@ using UnityEngine;
 public class EnemiesFactory : MonoBehaviour
 {
     [SerializeField] private Transform container;
-    [SerializeField] private Enemy redPrefab;
-    [SerializeField] private Enemy orangePrefab;
-    [SerializeField] private Enemy indigoPrefab;
-    [SerializeField] private Enemy yellowPrefab;
+    private Enemy redPrefab;
+    private Enemy orangePrefab;
+    private Enemy indigoPrefab;
+    private Enemy yellowPrefab;
+    private Enemy bluePrefab;
 
     public Enemy CreateEnemy(EEnemyType type)
     {
@@ -34,6 +35,9 @@ public class EnemiesFactory : MonoBehaviour
                 if (this.yellowPrefab == null)
                     this.yellowPrefab = DataManager.Instance.Enemies.GetEnemy(EEnemyType.Yellow).prefab;
                 return this.yellowPrefab;
+            case EEnemyType.Blue:
+                this.bluePrefab ??= DataManager.Instance.Enemies.GetEnemy(EEnemyType.Blue).prefab;
+                return this.bluePrefab;
             case EEnemyType.Indigo:
                 if (this.indigoPrefab == null)
                     this.indigoPrefab = DataManager.Instance.Enemies.GetEnemy(EEnemyType.Indigo).prefab;

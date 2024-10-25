@@ -17,6 +17,7 @@ public class CharacterUtils
             EDirectionType.Position3 => currentCell.cellPosition3,
             EDirectionType.Position7 => currentCell.cellPosition7,
             EDirectionType.Position9 => currentCell.cellPosition9,
+            EDirectionType.None => null,
             _ => throw new ArgumentOutOfRangeException(nameof(moveType), moveType, null)
         };
     }

@@ -72,6 +72,7 @@ public class EnemyInitialState : EnemyBaseState, IEnterState
             EEnemyType.Red => Map.Instance.GetRandomThinCellWithoutCharacter(),
             EEnemyType.Orange => Map.Instance.GetRandomThickCellWithoutCharacter(),
             EEnemyType.Yellow => Map.Instance.GetRandomThickCellWithoutCharacter(),
+            EEnemyType.Blue => Map.Instance.GetRandomThickCellWithoutCharacter(),
             EEnemyType.Indigo => Map.Instance.GetRandomThickCellWithoutCharacter(),
             _ => null
         };
@@ -94,20 +95,19 @@ public class EnemyMovementState : EnemyBaseState, IEnterState
         switch (enemy.Type)
         {
             case EEnemyType.Red:
-                if (!HasComponent<IMovementStrategy>())
-                    this.movementStrategy = gameObject.AddComponent<BorderMovement>();
+                this.movementStrategy ??= gameObject.AddComponent<BorderMovement>();
                 break;
             case EEnemyType.Orange:
-                if (!HasComponent<IMovementStrategy>())
-                    this.movementStrategy = gameObject.AddComponent<PingPongMovement>();
+                this.movementStrategy ??= gameObject.AddComponent<PingPongMovement>();
                 break;
             case EEnemyType.Yellow:
-                if (!HasComponent<IMovementStrategy>())
-                    this.movementStrategy = gameObject.AddComponent<PopOutMovement1379>();
+                this.movementStrategy ??= gameObject.AddComponent<PopOutMovement1379>();
+                break;
+            case EEnemyType.Blue:
+                this.movementStrategy ??= gameObject.AddComponent<FourDirectionMovement1379>();
                 break;
             case EEnemyType.Indigo:
-                if (!HasComponent<IMovementStrategy>())
-                    this.movementStrategy = gameObject.AddComponent<FourDirectionMovement2468>();
+                this.movementStrategy ??= gameObject.AddComponent<FourDirectionMovement2468>();
                 break;
             default:
                 throw new ArgumentOutOfRangeException();

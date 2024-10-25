@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
-[System.Serializable]
+[Serializable]
 public class CellData
 {
     public int x;
@@ -17,6 +19,18 @@ public class CellData
     public Cell cellPosition7;
     public Cell cellPosition9;
 
+    public Cell FindRandomCellFrom2468()
+    {
+        var cells = GetAdjacentCellsWithPosition2468().ToList();
+        return cells.Count == 0 ? null : cells[Random.Range(0, cells.Count)];
+    }
+
+    public Cell FindRandomCellFrom1379()
+    {
+        var cells = GetAdjacentCellsWithPosition1379().ToList();
+        return cells.Count == 0 ? null : cells[Random.Range(0, cells.Count)];
+    }
+
     public Cell[] GetAdjacentCellsWithPosition2468()
     {
         // Define an array of neighboring cells  
@@ -28,7 +42,21 @@ public class CellData
             cellPosition6
         };
 
-        return neighbors; // Return null if no unprocessed thick cell is found  
+        return neighbors;
+    }
+
+    public Cell[] GetAdjacentCellsWithPosition1379()
+    {
+        // Define an array of neighboring cells  
+        Cell[] neighbors =
+        {
+            cellPosition1,
+            cellPosition3,
+            cellPosition7,
+            cellPosition9
+        };
+
+        return neighbors;
     }
 
     public Cell[] Get8AdjacentCells()

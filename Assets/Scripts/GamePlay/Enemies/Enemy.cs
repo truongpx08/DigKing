@@ -8,9 +8,9 @@ public enum EEnemyType
     Orange,
     Yellow,
     // Green,
-    // Blue,
+    Blue,
     Indigo,
-    // Violet
+    Violet
 }
 
 public class Enemy : MonoBehaviour

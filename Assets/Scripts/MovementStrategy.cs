@@ -59,11 +59,6 @@ public class BaseMovementStrategy : TruongMonoBehaviour
         return thinCells.Count == 0 ? null : thinCells[Random.Range(0, thinCells.Count)];
     }
 
-    protected Cell FindRandomCell()
-    {
-        var cells = CurrentCell.DataHandler.Data.GetAdjacentCellsWithPosition2468().ToList();
-        return cells.Count == 0 ? null : cells[Random.Range(0, cells.Count)];
-    }
 
     protected Cell FindRandomThinCellForNavigation()
     {
@@ -77,9 +72,26 @@ public class BaseMovementStrategy : TruongMonoBehaviour
     }
 
     [Button]
-    protected Cell FindRandomCellForNavigation()
+    protected Cell FindRandom2468CellForNavigation()
     {
         var cells = CurrentCell.DataHandler.Data.GetAdjacentCellsWithPosition2468().ToList();
+
+        var oppositeDirection = DirectionUtils.GetOppositeDirection(direction);
+        var oppositeCell = CurrentCell.GetCellWithDirection(oppositeDirection);
+        if (oppositeCell != null) cells.Remove(oppositeCell);
+
+        var sameDirectionCell = CurrentCell.GetCellWithDirection(direction);
+        cells.Remove(sameDirectionCell);
+
+        if (cells.Contains(null)) cells.Remove(null);
+        if (cells.Contains(null)) cells.Remove(null);
+        var result = cells.Count == 0 ? null : cells[Random.Range(0, cells.Count)];
+        return result;
+    }
+
+    protected Cell FindRandom1379CellForNavigation()
+    {
+        var cells = CurrentCell.DataHandler.Data.GetAdjacentCellsWithPosition1379().ToList();
 
         var oppositeDirection = DirectionUtils.GetOppositeDirection(direction);
         var oppositeCell = CurrentCell.GetCellWithDirection(oppositeDirection);
@@ -189,7 +201,7 @@ public class FourDirectionMovement2468 : BaseMovementStrategy, IMovementStrategy
     public void Move()
     {
         LoadEnemyReference();
-        this.nextCellToMove = FindRandomCell();
+        this.nextCellToMove = CurrentCell.DataHandler.Data.FindRandomCellFrom2468();
         direction = CurrentCell.GetDirection(nextCellToMove);
 
         if (nextCellToMove != null)
@@ -208,7 +220,7 @@ public class FourDirectionMovement2468 : BaseMovementStrategy, IMovementStrategy
         Cell nextCell = CharacterUtils.GetNextCellToMove(CurrentCellData, direction);
         if (nextCell == null || nextCell.StateMachine.CurrentState is ECellState.Disabled || this.moveCount == 8)
         {
-            nextCellToMove = FindRandomCellForNavigation();
+            nextCellToMove = FindRandom2468CellForNavigation();
             direction = CurrentCell.GetDirection(nextCellToMove);
             LoopMovement();
             this.moveCount = 0;
@@ -264,6 +276,51 @@ public class PopOutMovement1379 : BaseMovementStrategy, IMovementStrategy
         }
 
         yield return MoveToCell(nextCell, 0.2f);
+        LoopMovement();
+    }
+
+    private void LoopMovement()
+    {
+        StopAllCoroutines();
+        StartCoroutine(MoveCoroutine()); // Continue moving to the next cell  
+    }
+}
+
+public class FourDirectionMovement1379 : BaseMovementStrategy, IMovementStrategy
+{
+    private Cell nextCellToMove;
+    private int moveCount;
+
+    public void Move()
+    {
+        LoadEnemyReference();
+        this.nextCellToMove = CurrentCell.DataHandler.Data.FindRandomCellFrom1379();
+        direction = CurrentCell.GetDirection(nextCellToMove);
+
+        if (nextCellToMove != null)
+            StartCoroutine(MoveCoroutine());
+    }
+
+    private IEnumerator MoveCoroutine()
+    {
+        this.moveCount++;
+        if (IsCellDisabled(CurrentCell))
+        {
+            enemy.StateMachine.ChangeState(EEnemyState.Disabled);
+            yield break;
+        }
+
+        Cell nextCell = CharacterUtils.GetNextCellToMove(CurrentCellData, direction);
+        if (!nextCell || nextCell.StateMachine.CurrentState is ECellState.Disabled || this.moveCount == 8)
+        {
+            nextCellToMove = FindRandom1379CellForNavigation();
+            direction = CurrentCell.GetDirection(nextCellToMove);
+            LoopMovement();
+            this.moveCount = 0;
+            yield break;
+        }
+
+        yield return MoveToCell(nextCell, 0.15f);
         LoopMovement();
     }
 
