@@ -79,7 +79,9 @@ public class EnemyInitialState : EnemyBaseState, IEnterState
         };
 
         if (currentCell == null) return;
-        this.enemy.DataHandler.SetCurrentCell(currentCell);
+        var speed = DataManager.Instance.Enemies.GetEnemy(EEnemyType.Red).speed;
+        this.enemy.DataHandler.Constructor(new EnemyData(speed, currentCell));
+        
         this.enemy.transform.position = currentCell.transform.position;
         this.enemy.StateMachine.ChangeState(EEnemyState.Movement);
     }

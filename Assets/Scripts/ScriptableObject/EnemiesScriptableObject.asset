@@ -15,13 +15,19 @@ MonoBehaviour:
   enemies:
   - type: 0
     prefab: {fileID: 7610023098716835449, guid: 92ce194029edabd45991ae92e25a93e0, type: 3}
+    speed: 0.2
   - type: 1
     prefab: {fileID: 7610023098716835449, guid: 4262eb1e376455c44bd37874b99310f0, type: 3}
+    speed: 0.2
   - type: 2
     prefab: {fileID: 7610023098716835449, guid: 2b07e35a471fc9a4a967dc95c24915d0, type: 3}
+    speed: 0.2
   - type: 3
     prefab: {fileID: 7610023098716835449, guid: 3ae7599dfe0aa5b49b2b4dd343d74bcd, type: 3}
+    speed: 0.2
   - type: 4
     prefab: {fileID: 7610023098716835449, guid: 1066db6ec0186324aac38135d984be96, type: 3}
+    speed: 0.2
   - type: 5
     prefab: {fileID: 7610023098716835449, guid: 9977e42eb3eaaa64eb6af7a3f4cef716, type: 3}
+    speed: 0.3

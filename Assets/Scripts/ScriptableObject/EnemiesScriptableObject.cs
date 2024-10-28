@@ -20,4 +20,5 @@ public class EnemyModelData
 {
     public EEnemyType type;
     public Enemy prefab;
+    public float speed;
 }

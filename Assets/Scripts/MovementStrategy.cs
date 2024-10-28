@@ -140,7 +140,7 @@ public class BorderMovement : BaseMovementStrategy, IMovementStrategy
             yield break;
         }
 
-        yield return MoveToCell(nextCell, 0.15f);
+        yield return MoveToCell(nextCell, this.enemy.DataHandler.Data.speed);
         LoopMovement();
     }
 
@@ -182,7 +182,7 @@ public class PingPongMovement : BaseMovementStrategy, IMovementStrategy
             yield break;
         }
 
-        yield return MoveToCell(nextCell, 0.2f);
+        yield return MoveToCell(nextCell, this.enemy.DataHandler.Data.speed);
         LoopMovement();
     }
 
@@ -227,7 +227,7 @@ public class FourDirectionMovement2468 : BaseMovementStrategy, IMovementStrategy
             yield break;
         }
 
-        yield return MoveToCell(nextCell, 0.15f);
+        yield return MoveToCell(nextCell, this.enemy.DataHandler.Data.speed);
         LoopMovement();
     }
 
@@ -275,7 +275,7 @@ public class PopOutMovement1379 : BaseMovementStrategy, IMovementStrategy
             yield break;
         }
 
-        yield return MoveToCell(nextCell, 0.2f);
+        yield return MoveToCell(nextCell, this.enemy.DataHandler.Data.speed);
         LoopMovement();
     }
 
@@ -320,7 +320,7 @@ public class FourDirectionMovement1379 : BaseMovementStrategy, IMovementStrategy
             yield break;
         }
 
-        yield return MoveToCell(nextCell, 0.15f);
+        yield return MoveToCell(nextCell, this.enemy.DataHandler.Data.speed);
         LoopMovement();
     }
 
@@ -377,7 +377,7 @@ public class Combine2468And1379Movement : BaseMovementStrategy, IMovementStrateg
             yield break;
         }
 
-        yield return MoveToCell(nextCell, 0.15f);
+        yield return MoveToCell(nextCell, this.enemy.DataHandler.Data.speed);
         LoopMovement();
     }
 
