@@ -99,10 +99,13 @@ public class PlayerMovementState : PlayerBaseState, IEnterState
     [SerializeField] private bool isStopping;
     [SerializeField] private int remainingMoveCount;
     [SerializeField] private bool shouldReduceRemainingMoves;
+    private float duration;
 
     public void Enter()
     {
         LoadPlayerReference();
+        if (this.duration == 0)
+            this.duration = DataManager.Instance.GameConfig.BaseMoveDuration; // Movement duration  
 
         var direction = PlayerInput.Instance.Direction;
         if (!CanMove(direction)) return;
@@ -146,7 +149,6 @@ public class PlayerMovementState : PlayerBaseState, IEnterState
 
         Vector3 startPosition = player.transform.position;
         Vector3 targetPosition = nextCell.transform.position;
-        float duration = 0.25f; // Movement duration  
         float elapsed = 0f;
 
         while (elapsed < duration)

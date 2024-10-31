@@ -359,6 +359,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemies: {fileID: 11400000, guid: e3af355955f45104abd09ea339d22b99, type: 2}
+  gameConfig: {fileID: 11400000, guid: 3b3a32d0b2a351641a453722059a96f0, type: 2}
 --- !u!4 &137880322
 Transform:
   m_ObjectHideFlags: 0
@@ -703,8 +704,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   container: {fileID: 1098744941}
-  redPrefab: {fileID: 7610023098716835449, guid: 92ce194029edabd45991ae92e25a93e0, type: 3}
-  bluePrefab: {fileID: 0}
 --- !u!1 &1098744940
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,4 +6,6 @@ public class DataManager : TruongSingleton<DataManager>
 {
     [SerializeField] private EnemiesScriptableObject enemies;
     public EnemiesScriptableObject Enemies => this.enemies;
+    [SerializeField] private GameConfig gameConfig;
+    public GameConfig GameConfig => this.gameConfig;
 }

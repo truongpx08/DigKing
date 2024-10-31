@@ -30,4 +30,4 @@ MonoBehaviour:
     speed: 0.2
   - type: 5
     prefab: {fileID: 7610023098716835449, guid: 9977e42eb3eaaa64eb6af7a3f4cef716, type: 3}
-    speed: 0.3
+    speed: 0.15

@@ -5,7 +5,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class MovementStrategy : MonoBehaviour
+public class EnemyMovementStrategy : MonoBehaviour
 {
 }
 
@@ -35,8 +35,9 @@ public class BaseMovementStrategy : TruongMonoBehaviour
         return cell.StateMachine.CurrentState == ECellState.Disabled;
     }
 
-    protected IEnumerator MoveToCell(Cell nextCell, float duration)
+    protected IEnumerator MoveToCell(Cell nextCell, float speed)
     {
+        float duration = 1 - speed * DataManager.Instance.GameConfig.BaseMoveDuration;
         Vector3 startPosition = enemy.transform.position;
         Vector3 targetPosition = nextCell.transform.position;
         float elapsed = 0f;
